@@ -2,6 +2,9 @@
  * Application constants
  */
 
+/** TAU = 2π, the full circle constant */
+export const TAU = 2 * Math.PI;
+
 export const MEDIUM_ARTICLE_URL = "https://medium.com/p/8713770f5598/";
 
 /**

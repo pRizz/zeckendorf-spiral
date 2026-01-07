@@ -1,3 +1,5 @@
+import { TAU } from "./constants";
+
 type Direction = "LEFT" | "DOWN" | "RIGHT" | "UP";
 
 type FibSquare = {
@@ -140,7 +142,7 @@ function drawSquares(
     ctx.beginPath();
     ctx.fillStyle = colors.origin;
     const markerSize = Math.max(2, Math.min(4, logicalWidth / 200));
-    ctx.arc(cx, cy, markerSize, 0, Math.PI * 2);
+    ctx.arc(cx, cy, markerSize, 0, TAU);
     ctx.fill();
   }
 
@@ -246,51 +248,51 @@ function getArcParams(square: FibSquare, index: number): ArcParams {
   const { x0, y0, x1, y1, size } = square;
   
   // World coordinate angles (Y goes up):
-  // 0 = right, π/2 = up, π = left, 3π/2 = down
+  // 0 = right, τ/4 = up, τ/2 = left, 3τ/4 = down
   
   switch (cyclePos) {
     case 0:
       // Center at bottom-left corner
-      // Arc from bottom-right (angle 0) to top-left (angle π/2), counterclockwise
+      // Arc from bottom-right (angle 0) to top-left (angle τ/4), counterclockwise
       return {
         centerX: x0,
         centerY: y0,
         radius: size,
-        startAngle: 0,            // points to bottom-right
-        endAngle: Math.PI / 2,    // points to top-left
+        startAngle: 0,              // points to bottom-right
+        endAngle: TAU / 4,          // points to top-left
         counterclockwise: true,
       };
     case 1:
       // Center at bottom-right corner
-      // Arc from top-right (angle π/2) to bottom-left (angle π), counterclockwise
+      // Arc from top-right (angle τ/4) to bottom-left (angle τ/2), counterclockwise
       return {
         centerX: x1,
         centerY: y0,
         radius: size,
-        startAngle: Math.PI / 2,  // points to top-right
-        endAngle: Math.PI,        // points to bottom-left
+        startAngle: TAU / 4,        // points to top-right
+        endAngle: TAU / 2,          // points to bottom-left
         counterclockwise: true,
       };
     case 2:
       // Center at top-right corner
-      // Arc from top-left (angle π) to bottom-right (angle 3π/2), counterclockwise
+      // Arc from top-left (angle τ/2) to bottom-right (angle 3τ/4), counterclockwise
       return {
         centerX: x1,
         centerY: y1,
         radius: size,
-        startAngle: Math.PI,          // points to top-left
-        endAngle: Math.PI * 1.5,      // points to bottom-right
+        startAngle: TAU / 2,        // points to top-left
+        endAngle: TAU * 0.75,       // points to bottom-right
         counterclockwise: true,
       };
     case 3:
       // Center at top-left corner
-      // Arc from bottom-left (angle 3π/2) to top-right (angle 2π/0), counterclockwise
+      // Arc from bottom-left (angle 3τ/4) to top-right (angle τ), counterclockwise
       return {
         centerX: x0,
         centerY: y1,
         radius: size,
-        startAngle: Math.PI * 1.5,    // points to bottom-left
-        endAngle: Math.PI * 2,        // points to top-right (same as 0)
+        startAngle: TAU * 0.75,     // points to bottom-left
+        endAngle: TAU,              // points to top-right (same as 0)
         counterclockwise: true,
       };
     default:
@@ -447,7 +449,7 @@ function drawSquaresAnimated(
     ctx.beginPath();
     ctx.fillStyle = colors.origin;
     const markerSize = Math.max(2, Math.min(4, logicalWidth / 200));
-    ctx.arc(cx, cy, markerSize, 0, Math.PI * 2);
+    ctx.arc(cx, cy, markerSize, 0, TAU);
     ctx.fill();
   }
 
