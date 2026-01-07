@@ -31,7 +31,7 @@ const Index = () => {
           </div>
 
           {/* Canvas - takes remaining space */}
-          <div className="flex-1 min-h-0">
+          <div className="flex-1 min-h-0 px-2 sm:px-4">
             <FibonacciCanvas count={count} />
           </div>
 
