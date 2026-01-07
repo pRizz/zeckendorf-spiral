@@ -241,6 +241,15 @@ export function SettingsMenu() {
                       <span className="text-xs">Source Code on GitHub</span>
                     </a>
                     <a 
+                      href="https://github.com/pRizz/zeckendorf"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-2 text-primary hover:underline"
+                    >
+                      <ExternalLink className="h-3 w-3" />
+                      <span className="text-xs">Free &amp; open source Rust code for Zeckendorf Compression and Decompression</span>
+                    </a>
+                    <a 
                       href="https://medium.com/@peterryszkiewicz/exploring-fibonacci-based-compression-8713770f5598"
                       target="_blank"
                       rel="noopener noreferrer"

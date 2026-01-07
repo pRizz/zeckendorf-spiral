@@ -3,6 +3,7 @@ import { Github } from "lucide-react";
 import { FibonacciCanvas } from "@/components/FibonacciCanvas";
 import { SquareSlider } from "@/components/SquareSlider";
 import { SettingsMenu } from "@/components/SettingsMenu";
+import { FooterSection } from "@/components/FooterSection";
 import { useSettings } from "@/contexts/SettingsContext";
 import { Button } from "@/components/ui/button";
 
@@ -61,28 +62,14 @@ const Index = () => {
           {/* Info footer */}
           <div className="shrink-0 text-center text-[10px] sm:text-xs text-muted-foreground/70 py-1 space-y-0.5">
             <div className="font-mono">Even Fibonacci indices: F₂, F₄, F₆, ... F₂ₙ</div>
-            <div>
-              <a
-                href="https://zeckendorf.lovable.app"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:text-primary transition-colors"
-              >
-                zeckendorf.lovable.app
-              </a>
-              {" · "}
-              <a
-                href="https://github.com/pRizz/zeckendorf-spiral"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:text-primary transition-colors"
-              >
-                Open Source
-              </a>
-            </div>
           </div>
         </div>
       </main>
+
+      {/* Footer Section */}
+      <div className="shrink-0 px-4 pb-6">
+        <FooterSection />
+      </div>
     </div>
   );
 };
