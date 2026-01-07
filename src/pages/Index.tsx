@@ -8,7 +8,7 @@ import { useSettings } from "@/contexts/SettingsContext";
 import { Button } from "@/components/ui/button";
 
 const Index = () => {
-  const [count, setCount] = useState(5);
+  const [count, setCount] = useState(6);
   const { animationSpeed } = useSettings();
 
   return (
