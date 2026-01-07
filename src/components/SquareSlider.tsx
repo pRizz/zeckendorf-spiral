@@ -11,29 +11,48 @@ interface SquareSliderProps {
   animationSpeed?: number;
 }
 
-// Attempt to solve cubic bezier at time t using Newton's method
+// Solve cubic bezier for parameter u given x-coordinate t, with Newton + bisection fallback
 function cubicBezier(p1x: number, p1y: number, p2x: number, p2y: number, t: number): number {
-  // Calculate the polynomial coefficients
+  // Clamp input
+  t = Math.min(1, Math.max(0, t));
+
+  // Coefficients for x(u) and y(u) where P0=(0,0), P3=(1,1)
   const cx = 3 * p1x;
   const bx = 3 * (p2x - p1x) - cx;
   const ax = 1 - cx - bx;
-  
+
   const cy = 3 * p1y;
   const by = 3 * (p2y - p1y) - cy;
   const ay = 1 - cy - by;
-  
-  // Solve for x given t using Newton-Raphson
-  let x = t;
+
+  const sampleX = (u: number) => ((ax * u + bx) * u + cx) * u;
+  const sampleY = (u: number) => ((ay * u + by) * u + cy) * u;
+  const sampleDX = (u: number) => (3 * ax * u + 2 * bx) * u + cx;
+
+  // Solve x(u)=t for u using Newton-Raphson
+  let u = t;
   for (let i = 0; i < 8; i++) {
-    const xCalc = ((ax * x + bx) * x + cx) * x - t;
-    if (Math.abs(xCalc) < 1e-6) break;
-    const d = (3 * ax * x + 2 * bx) * x + cx;
-    if (Math.abs(d) < 1e-6) break;
-    x -= xCalc / d;
+    const x = sampleX(u) - t;
+    if (Math.abs(x) < 1e-7) return sampleY(u);
+    const d = sampleDX(u);
+    if (Math.abs(d) < 1e-7) break;
+    u -= x / d;
+    if (u < 0) u = 0;
+    else if (u > 1) u = 1;
   }
-  
-  // Return y value
-  return ((ay * x + by) * x + cy) * x;
+
+  // Fallback: bisection
+  let lo = 0, hi = 1;
+  u = t;
+  for (let i = 0; i < 20; i++) {
+    const x = sampleX(u);
+    if (Math.abs(x - t) < 1e-7) break;
+    if (x < t) lo = u;
+    else hi = u;
+    u = (lo + hi) / 2;
+  }
+
+  return sampleY(u);
 }
 
 export function SquareSlider({ value, onChange, min = 1, max = 10, animationSpeed = 1 }: SquareSliderProps) {
