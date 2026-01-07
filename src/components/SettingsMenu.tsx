@@ -30,8 +30,8 @@ export function SettingsMenu() {
     setUseSqrtMode,
     theme,
     setTheme,
-    lineThickness,
-    setLineThickness,
+    lineThicknessMultiplier,
+    setLineThicknessMultiplier,
   } = useSettings();
 
   return (
@@ -106,23 +106,28 @@ export function SettingsMenu() {
 
           <Separator />
 
-          {/* Line Thickness */}
+          {/* Line Thickness Multiplier */}
           <div className="space-y-3">
-            <div className="flex items-center gap-3">
-              <Minus className="h-4 w-4 text-muted-foreground" />
-              <span className="text-sm font-medium">Spiral Thickness</span>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <Minus className="h-4 w-4 text-muted-foreground" />
+                <span className="text-sm font-medium">Spiral Thickness</span>
+              </div>
+              <span className="text-xs text-muted-foreground font-mono">
+                {lineThicknessMultiplier.toFixed(2)}×
+              </span>
             </div>
             <div className="flex items-center gap-3 pl-7">
-              <span className="text-xs text-muted-foreground">Thin</span>
+              <span className="text-xs text-muted-foreground font-mono">0.25×</span>
               <Slider
-                value={[lineThickness]}
-                onValueChange={([val]) => setLineThickness(val)}
-                min={0.5}
+                value={[lineThicknessMultiplier]}
+                onValueChange={([val]) => setLineThicknessMultiplier(val)}
+                min={0.25}
                 max={2}
-                step={0.25}
+                step={0.05}
                 className="flex-1"
               />
-              <span className="text-xs text-muted-foreground">Thick</span>
+              <span className="text-xs text-muted-foreground font-mono">2×</span>
             </div>
           </div>
 
