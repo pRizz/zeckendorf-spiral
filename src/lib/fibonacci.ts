@@ -281,7 +281,7 @@ function getArcParams(square: FibSquare, index: number): ArcParams {
         centerY: y1,
         radius: size,
         startAngle: TAU / 2,        // points to top-left
-        endAngle: TAU * 0.75,       // points to bottom-right
+        endAngle: 3 / 4 * TAU,       // points to bottom-right
         counterclockwise: true,
       };
     case 3:
@@ -291,7 +291,7 @@ function getArcParams(square: FibSquare, index: number): ArcParams {
         centerX: x0,
         centerY: y1,
         radius: size,
-        startAngle: TAU * 0.75,     // points to bottom-left
+        startAngle: 3 / 4 * TAU,     // points to bottom-left
         endAngle: TAU,              // points to top-right (same as 0)
         counterclockwise: true,
       };
