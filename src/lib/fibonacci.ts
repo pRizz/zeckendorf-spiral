@@ -314,6 +314,12 @@ function drawSpiral(
   ctx.lineJoin = 'round';
   ctx.globalAlpha = alpha;
   
+  // Add subtle glow effect
+  ctx.shadowColor = spiralColor;
+  ctx.shadowBlur = 12;
+  ctx.shadowOffsetX = 0;
+  ctx.shadowOffsetY = 0;
+  
   ctx.beginPath();
   
   let isFirst = true;
@@ -362,6 +368,12 @@ function drawSpiralPartial(
   ctx.lineCap = 'round';
   ctx.lineJoin = 'round';
   ctx.globalAlpha = alpha;
+  
+  // Add subtle glow effect
+  ctx.shadowColor = spiralColor;
+  ctx.shadowBlur = 12;
+  ctx.shadowOffsetX = 0;
+  ctx.shadowOffsetY = 0;
   
   ctx.beginPath();
   
