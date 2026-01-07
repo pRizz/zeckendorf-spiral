@@ -28,7 +28,14 @@ export const FooterSection = (): JSX.Element => {
       </p>
       <p className="text-xs">
         Made by{" "}
-        <span className="text-foreground">Peter Ryszkiewicz</span>{" "}
+        <a 
+          href={LINKEDIN_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-foreground hover:text-primary hover:underline transition-colors"
+        >
+          Peter Ryszkiewicz
+        </a>{" "}
         with{" "}
         <a 
           href="https://cursor.sh" 
