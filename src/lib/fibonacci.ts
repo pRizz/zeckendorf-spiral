@@ -220,12 +220,185 @@ function interpolateBounds(from: Bounds, to: Bounds, t: number): Bounds {
   };
 }
 
+type ArcParams = {
+  centerX: number;  // world coords
+  centerY: number;
+  radius: number;
+  startAngle: number;  // canvas angles (after Y flip)
+  endAngle: number;
+  counterclockwise: boolean;
+};
+
+// Get the arc parameters for each square in the spiral
+// The arcs should be tangent at the edges where squares meet
+function getArcParams(square: FibSquare, index: number): ArcParams {
+  const cyclePos = index % 4;
+  const { x0, y0, x1, y1, size } = square;
+  
+  // In canvas coordinates (after Y flip from world):
+  // - World Y up becomes Canvas Y down
+  // - Canvas: 0 = right, π/2 = down, π = left, 3π/2 = up
+  // 
+  // The spiral should flow continuously. Based on the placement pattern
+  // (LEFT, DOWN, RIGHT, UP), we position arc centers at corners that
+  // create tangent connections at the shared edges.
+  
+  switch (cyclePos) {
+    case 0:
+      // First square or cycle restart
+      // Pivot at top-right corner (world), arc sweeps from right edge to top edge
+      // In canvas (Y flipped): top-right (world) = top-right (canvas since x same, y flipped)
+      // Arc from bottom (canvas) to right (canvas)
+      return {
+        centerX: x1,
+        centerY: y1,
+        radius: size,
+        startAngle: Math.PI / 2,  // down in canvas = bottom of square
+        endAngle: 0,              // right in canvas = right of square
+        counterclockwise: true,
+      };
+    case 1:
+      // After LEFT placement
+      // Pivot at top-left corner (world)
+      // Arc from left edge to top edge
+      return {
+        centerX: x0,
+        centerY: y1,
+        radius: size,
+        startAngle: Math.PI,      // left in canvas
+        endAngle: Math.PI / 2,    // down in canvas
+        counterclockwise: true,
+      };
+    case 2:
+      // After DOWN placement
+      // Pivot at bottom-left corner (world)
+      // Arc from bottom edge to left edge
+      return {
+        centerX: x0,
+        centerY: y0,
+        radius: size,
+        startAngle: Math.PI * 1.5,  // up in canvas = top
+        endAngle: Math.PI,          // left in canvas
+        counterclockwise: true,
+      };
+    case 3:
+      // After RIGHT placement
+      // Pivot at bottom-right corner (world)
+      // Arc from right edge to bottom edge
+      return {
+        centerX: x1,
+        centerY: y0,
+        radius: size,
+        startAngle: 0,              // right in canvas
+        endAngle: Math.PI * 1.5,    // up in canvas
+        counterclockwise: true,
+      };
+    default:
+      return { centerX: 0, centerY: 0, radius: size, startAngle: 0, endAngle: 0, counterclockwise: true };
+  }
+}
+
+function drawSpiral(
+  ctx: CanvasRenderingContext2D,
+  squares: FibSquare[],
+  toCanvas: (x: number, y: number) => { cx: number; cy: number },
+  scale: number,
+  spiralColor: string,
+  lineWidth: number,
+  alpha: number = 1
+) {
+  if (squares.length === 0) return;
+  
+  ctx.save();
+  ctx.strokeStyle = spiralColor;
+  ctx.lineWidth = lineWidth * 2;
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+  ctx.globalAlpha = alpha;
+  
+  ctx.beginPath();
+  
+  let isFirst = true;
+  
+  for (let i = 0; i < squares.length; i++) {
+    const square = squares[i];
+    const arc = getArcParams(square, i);
+    
+    const center = toCanvas(arc.centerX, arc.centerY);
+    const radius = arc.radius * scale;
+    
+    // Flip angles for canvas Y-flip
+    const canvasStartAngle = -arc.startAngle;
+    const canvasEndAngle = -arc.endAngle;
+    
+    if (isFirst) {
+      const startX = center.cx + radius * Math.cos(canvasStartAngle);
+      const startY = center.cy + radius * Math.sin(canvasStartAngle);
+      ctx.moveTo(startX, startY);
+      isFirst = false;
+    }
+    
+    ctx.arc(center.cx, center.cy, radius, canvasStartAngle, canvasEndAngle, !arc.counterclockwise);
+  }
+  
+  ctx.stroke();
+  ctx.restore();
+}
+
+// Draw only a portion of the spiral (for fade animations)
+function drawSpiralPartial(
+  ctx: CanvasRenderingContext2D,
+  squares: FibSquare[],
+  startIndex: number,
+  toCanvas: (x: number, y: number) => { cx: number; cy: number },
+  scale: number,
+  spiralColor: string,
+  lineWidth: number,
+  alpha: number = 1
+) {
+  if (squares.length === 0 || startIndex >= squares.length) return;
+  
+  ctx.save();
+  ctx.strokeStyle = spiralColor;
+  ctx.lineWidth = lineWidth * 2;
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+  ctx.globalAlpha = alpha;
+  
+  ctx.beginPath();
+  
+  let isFirst = true;
+  
+  for (let i = startIndex; i < squares.length; i++) {
+    const square = squares[i];
+    const arc = getArcParams(square, i);
+    
+    const center = toCanvas(arc.centerX, arc.centerY);
+    const radius = arc.radius * scale;
+    
+    const canvasStartAngle = -arc.startAngle;
+    const canvasEndAngle = -arc.endAngle;
+    
+    if (isFirst) {
+      const startX = center.cx + radius * Math.cos(canvasStartAngle);
+      const startY = center.cy + radius * Math.sin(canvasStartAngle);
+      ctx.moveTo(startX, startY);
+      isFirst = false;
+    }
+    
+    ctx.arc(center.cx, center.cy, radius, canvasStartAngle, canvasEndAngle, !arc.counterclockwise);
+  }
+  
+  ctx.stroke();
+  ctx.restore();
+}
+
 function drawSquaresAnimated(
   ctx: CanvasRenderingContext2D,
   canvas: HTMLCanvasElement,
   squares: FibSquare[],
   interpolatedBounds: Bounds,
-  colors: { stroke: string; fill: string; text: string; origin: string },
+  colors: { stroke: string; fill: string; text: string; origin: string; spiral: string },
   paddingPx: number,
   fadeInIndices: Set<number>,
   fadeOutSquares: FibSquare[],
@@ -264,8 +437,9 @@ function drawSquaresAnimated(
     ctx.fill();
   }
 
+  const lineWidth = Math.max(1, Math.min(2, logicalWidth / 400));
   ctx.strokeStyle = colors.stroke;
-  ctx.lineWidth = Math.max(1, Math.min(2, logicalWidth / 400));
+  ctx.lineWidth = lineWidth;
   const baseFontSize = Math.max(8, Math.min(13, logicalWidth / 50));
 
   // Draw fading out squares first
@@ -308,6 +482,8 @@ function drawSquaresAnimated(
     ctx.fillRect(topLeft.cx, topLeft.cy, w, h);
 
     ctx.globalAlpha = alpha;
+    ctx.strokeStyle = colors.stroke;
+    ctx.lineWidth = lineWidth;
     ctx.strokeRect(topLeft.cx, topLeft.cy, w, h);
 
     if (w > 35) {
@@ -321,6 +497,29 @@ function drawSquaresAnimated(
     }
   }
   
+  // Draw the spiral
+  // For squares that are fully visible (not fading in), draw solid spiral
+  // For fading squares, draw with appropriate alpha
+  
+  const stableSquareCount = squares.length - fadeInIndices.size;
+  
+  // Draw spiral for stable squares (full alpha)
+  if (stableSquareCount > 0) {
+    const stableSquares = squares.slice(0, stableSquareCount);
+    drawSpiral(ctx, stableSquares, toCanvas, scale, colors.spiral, lineWidth, 1);
+  }
+  
+  // Draw fading in spiral arcs for new squares
+  if (fadeInIndices.size > 0) {
+    drawSpiralPartial(ctx, squares, stableSquareCount, toCanvas, scale, colors.spiral, lineWidth, progress);
+  }
+  
+  // Draw fading out spiral arcs for squares being removed
+  if (fadeOutSquares.length > 0) {
+    const allSquaresForFadeOut = [...squares, ...fadeOutSquares];
+    drawSpiralPartial(ctx, allSquaresForFadeOut, squares.length, toCanvas, scale, colors.spiral, lineWidth, 1 - progress);
+  }
+  
   ctx.globalAlpha = 1.0;
 }
 
@@ -329,7 +528,7 @@ export function drawFibonacciEvenIndexSquaresAnimated(
   fromCount: number,
   toCount: number,
   progress: number,
-  colors: { stroke: string; fill: string; text: string; origin: string },
+  colors: { stroke: string; fill: string; text: string; origin: string; spiral: string },
   paddingPx: number = 24
 ) {
   const ctx = canvas.getContext("2d");
@@ -374,7 +573,7 @@ export function drawFibonacciEvenIndexSquaresAnimated(
 export function drawFibonacciEvenIndexSquares(
   canvas: HTMLCanvasElement, 
   n: number,
-  colors: { stroke: string; fill: string; text: string; origin: string },
+  colors: { stroke: string; fill: string; text: string; origin: string; spiral: string },
   paddingPx: number = 24
 ) {
   drawFibonacciEvenIndexSquaresAnimated(canvas, n, n, 1, colors, paddingPx);
