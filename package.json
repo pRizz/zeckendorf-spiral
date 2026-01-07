@@ -1,9 +1,8 @@
 {
   "name": "zeckendorf-spiral",
   "description": "Interactive visualization of Fibonacci squares inspired by Zeckendorf's Theorem",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
-  "private": true,
   "homepage": "https://zeckendorf.lovable.app",
   "repository": {
     "type": "git",
