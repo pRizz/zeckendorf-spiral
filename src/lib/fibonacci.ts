@@ -102,28 +102,54 @@ function drawSquares(
   canvas: HTMLCanvasElement,
   squares: FibSquare[],
   colors: { stroke: string; fill: string; text: string; origin: string },
-  opts?: { paddingPx?: number; showLabels?: boolean }
+  paddingPx: number,
+  showLabels: boolean = true
 ) {
-  const paddingPx = opts?.paddingPx ?? 20;
-  const showLabels = opts?.showLabels ?? true;
+  const dpr = window.devicePixelRatio || 1;
+  
+  // Use logical dimensions for drawing
+  const logicalWidth = canvas.width / dpr;
+  const logicalHeight = canvas.height / dpr;
 
   const bounds = computeBounds(squares);
-  const { scale, toCanvas } = worldToCanvasMapper(bounds, canvas, paddingPx);
+  
+  // Custom mapper using logical dimensions
+  const usableW = Math.max(1, logicalWidth - 2 * paddingPx);
+  const usableH = Math.max(1, logicalHeight - 2 * paddingPx);
+  const worldW = Math.max(1e-9, bounds.maxX - bounds.minX);
+  const worldH = Math.max(1e-9, bounds.maxY - bounds.minY);
+  const scale = Math.min(usableW / worldW, usableH / worldH);
 
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  const toCanvas = (x: number, y: number) => {
+    // Center the content
+    const contentW = worldW * scale;
+    const contentH = worldH * scale;
+    const offsetX = paddingPx + (usableW - contentW) / 2;
+    const offsetY = paddingPx + (usableH - contentH) / 2;
+    
+    const cx = offsetX + (x - bounds.minX) * scale;
+    const cy = offsetY + (bounds.maxY - y) * scale;
+    return { cx, cy };
+  };
 
-  // Origin marker
+  ctx.clearRect(0, 0, logicalWidth, logicalHeight);
+
+  // Origin marker - scale with canvas size
   {
     const { cx, cy } = toCanvas(0, 0);
     ctx.beginPath();
     ctx.fillStyle = colors.origin;
-    ctx.arc(cx, cy, 4, 0, Math.PI * 2);
+    const markerSize = Math.max(2, Math.min(4, logicalWidth / 200));
+    ctx.arc(cx, cy, markerSize, 0, Math.PI * 2);
     ctx.fill();
   }
 
   ctx.strokeStyle = colors.stroke;
-  ctx.lineWidth = Math.max(1.5, 2 * (canvas.width / 800));
-  ctx.font = `600 ${Math.max(11, 13)}px "JetBrains Mono", ui-monospace, monospace`;
+  // Scale line width appropriately
+  ctx.lineWidth = Math.max(1, Math.min(2, logicalWidth / 400));
+  
+  // Scale font size based on canvas and square size
+  const baseFontSize = Math.max(8, Math.min(13, logicalWidth / 50));
 
   for (const s of squares) {
     const topLeft = toCanvas(s.x0, s.y1);
@@ -139,11 +165,16 @@ function drawSquares(
     ctx.globalAlpha = 1.0;
     ctx.strokeRect(topLeft.cx, topLeft.cy, w, h);
 
-    if (showLabels && w > 40) {
+    // Only show labels if square is large enough
+    if (showLabels && w > 35) {
       ctx.fillStyle = colors.text;
       ctx.globalAlpha = 0.9;
-      const label = `F${s.fibIndex} = ${s.size}`;
-      ctx.fillText(label, topLeft.cx + 8, topLeft.cy + 20);
+      // Scale font with square size
+      const fontSize = Math.max(8, Math.min(baseFontSize, w / 5));
+      ctx.font = `600 ${fontSize}px "JetBrains Mono", ui-monospace, monospace`;
+      const label = `F${s.fibIndex}=${s.size}`;
+      const labelPadding = Math.max(4, w * 0.06);
+      ctx.fillText(label, topLeft.cx + labelPadding, topLeft.cy + fontSize + labelPadding);
     }
   }
   
@@ -153,7 +184,8 @@ function drawSquares(
 export function drawFibonacciEvenIndexSquares(
   canvas: HTMLCanvasElement, 
   n: number,
-  colors: { stroke: string; fill: string; text: string; origin: string }
+  colors: { stroke: string; fill: string; text: string; origin: string },
+  paddingPx: number = 24
 ) {
   const ctx = canvas.getContext("2d");
   if (!ctx) return;
@@ -188,5 +220,5 @@ export function drawFibonacciEvenIndexSquares(
     squares.push(placeNextSquare(prev, nextSize, dir, nextFibIndex));
   }
 
-  drawSquares(ctx, canvas, squares, colors, { paddingPx: 32, showLabels: true });
+  drawSquares(ctx, canvas, squares, colors, paddingPx, true);
 }
