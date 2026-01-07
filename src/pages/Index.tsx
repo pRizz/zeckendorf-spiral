@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Github } from "lucide-react";
-import { FibonacciCanvas } from "@/components/FibonacciCanvas";
+import { FibonacciCanvas, FibonacciCanvasRef } from "@/components/FibonacciCanvas";
 import { SquareSlider } from "@/components/SquareSlider";
 import { SettingsMenu } from "@/components/SettingsMenu";
+import { ShareMenu } from "@/components/ShareMenu";
 import { FooterSection } from "@/components/FooterSection";
 import { useSettings } from "@/contexts/SettingsContext";
 import { Button } from "@/components/ui/button";
@@ -10,6 +11,7 @@ import { Button } from "@/components/ui/button";
 const Index = () => {
   const [count, setCount] = useState(6);
   const { animationSpeed } = useSettings();
+  const canvasRef = useRef<FibonacciCanvasRef>(null);
 
   return (
     <div className="h-dvh bg-background flex flex-col overflow-hidden">
@@ -26,6 +28,7 @@ const Index = () => {
             <span className="text-[10px] sm:text-xs text-muted-foreground font-mono hidden xs:block">
               F<sub>n</sub> = F<sub>n-1</sub> + F<sub>n-2</sub>
             </span>
+            <ShareMenu canvasRef={{ current: canvasRef.current?.getCanvas() ?? null }} />
             <Button
               variant="ghost"
               size="icon"
@@ -56,7 +59,7 @@ const Index = () => {
 
           {/* Canvas - takes remaining space */}
           <div className="flex-1 min-h-0 px-2 sm:px-4">
-            <FibonacciCanvas count={count} />
+            <FibonacciCanvas ref={canvasRef} count={count} />
           </div>
 
           {/* Info footer */}
