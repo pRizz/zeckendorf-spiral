@@ -146,14 +146,15 @@ function arcToSvgPath(
   const endX = cx + radius * Math.cos(endAngle);
   const endY = cy + radius * Math.sin(endAngle);
   
-  // Convert to SVG coords
+  // Convert to SVG coords (Y is flipped)
   const start = toSvg(startX, startY);
   const end = toSvg(endX, endY);
   
   // SVG arc: A rx ry x-axis-rotation large-arc-flag sweep-flag x y
-  // For quarter circles: large-arc = 0, sweep = 0 (counterclockwise in SVG coords due to Y flip)
+  // large-arc = 0 (quarter circle is less than 180°)
+  // sweep = 0 (counterclockwise in SVG coords, which is clockwise in world coords due to Y flip)
   const move = isFirst ? `M ${start.x.toFixed(3)} ${start.y.toFixed(3)} ` : '';
-  return `${move}A ${r.toFixed(3)} ${r.toFixed(3)} 0 0 1 ${end.x.toFixed(3)} ${end.y.toFixed(3)}`;
+  return `${move}A ${r.toFixed(3)} ${r.toFixed(3)} 0 0 0 ${end.x.toFixed(3)} ${end.y.toFixed(3)}`;
 }
 
 export interface SvgExportOptions {
