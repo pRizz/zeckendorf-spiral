@@ -1,73 +1,40 @@
-# Welcome to your Lovable project
+# Zeckendorf Spiral
 
-## Project info
+An interactive visualization of Fibonacci squares inspired by Zeckendorf's Theorem — the principle that every positive integer can be uniquely represented as a sum of non-consecutive Fibonacci numbers.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+## Features
 
-## How can I edit this code?
+- **Interactive Visualization**: Drag a slider to control the number of Fibonacci squares displayed
+- **Golden Spiral**: A smooth curve arcs through each square, tracing the iconic Fibonacci spiral
+- **√Fₙ Mode**: Toggle between standard even-indexed Fibonacci numbers and their square roots for square side lengths
+- **Theme Support**: Light and dark mode
+- **Customizable Labels**: Show/hide square labels
+- **Animation Speed Control**: Adjust how quickly squares animate
 
-There are several ways of editing your application.
+## The Math
 
-**Use Lovable**
+### Zeckendorf's Theorem
+Every positive integer can be uniquely represented as a sum of non-consecutive Fibonacci numbers. For example: 30 = 21 + 8 + 1 = F₈ + F₆ + F₂
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+### √Fₙ Mode & All Ones Zeckendorf Numbers
+When √Fₙ Mode is enabled, square side lengths equal √F₂, √F₄, √F₆, etc. This makes the **sum of the areas** equal to the "All Ones Zeckendorf Number" (AOZN) — a number whose Zeckendorf representation consists entirely of 1-bits.
 
-Changes made via Lovable will be committed automatically to this repo.
+For example, with 4 squares: √F₂² + √F₄² + √F₆² + √F₈² = 1 + 3 + 8 + 21 = 33, which in Zeckendorf form is `1111`.
 
-**Use your preferred IDE**
+## Tech Stack
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+- React + TypeScript
+- Vite
+- Tailwind CSS
+- shadcn/ui
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
+## Development
 
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+npm install
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+## Learn More
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+- [Exploring Fibonacci-Based Compression](https://medium.com/@peterryszkiewicz/exploring-fibonacci-based-compression-8713770f5598) — The article that inspired the √Fₙ mode concept
