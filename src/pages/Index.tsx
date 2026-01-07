@@ -1,8 +1,10 @@
 import { useState } from "react";
+import { Github } from "lucide-react";
 import { FibonacciCanvas } from "@/components/FibonacciCanvas";
 import { SquareSlider } from "@/components/SquareSlider";
 import { SettingsMenu } from "@/components/SettingsMenu";
 import { useSettings } from "@/contexts/SettingsContext";
+import { Button } from "@/components/ui/button";
 
 const Index = () => {
   const [count, setCount] = useState(5);
@@ -23,6 +25,21 @@ const Index = () => {
             <span className="text-[10px] sm:text-xs text-muted-foreground font-mono hidden xs:block">
               F<sub>n</sub> = F<sub>n-1</sub> + F<sub>n-2</sub>
             </span>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8 text-muted-foreground hover:text-foreground"
+              asChild
+            >
+              <a
+                href="https://github.com/pRizz/zeckendorf-spiral"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="View source on GitHub"
+              >
+                <Github className="h-5 w-5" />
+              </a>
+            </Button>
             <SettingsMenu />
           </div>
         </div>
@@ -42,8 +59,27 @@ const Index = () => {
           </div>
 
           {/* Info footer */}
-          <div className="shrink-0 text-center text-[10px] sm:text-xs text-muted-foreground/70 font-mono py-1">
-            Even Fibonacci indices: F₂, F₄, F₆, ... F₂ₙ
+          <div className="shrink-0 text-center text-[10px] sm:text-xs text-muted-foreground/70 py-1 space-y-0.5">
+            <div className="font-mono">Even Fibonacci indices: F₂, F₄, F₆, ... F₂ₙ</div>
+            <div>
+              <a
+                href="https://zeckendorf.lovable.app"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-primary transition-colors"
+              >
+                zeckendorf.lovable.app
+              </a>
+              {" · "}
+              <a
+                href="https://github.com/pRizz/zeckendorf-spiral"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-primary transition-colors"
+              >
+                Open Source
+              </a>
+            </div>
           </div>
         </div>
       </main>

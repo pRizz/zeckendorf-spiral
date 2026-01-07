@@ -2,6 +2,9 @@
 
 An interactive visualization of Fibonacci squares inspired by Zeckendorf's Theorem — the principle that every positive integer can be uniquely represented as a sum of non-consecutive Fibonacci numbers.
 
+🌐 **Live Demo**: [zeckendorf.lovable.app](https://zeckendorf.lovable.app)  
+📦 **Source Code**: [github.com/pRizz/zeckendorf-spiral](https://github.com/pRizz/zeckendorf-spiral)
+
 ## Features
 
 - **Interactive Visualization**: Drag a slider to control the number of Fibonacci squares displayed
@@ -38,3 +41,7 @@ npm run dev
 ## Learn More
 
 - [Exploring Fibonacci-Based Compression](https://medium.com/@peterryszkiewicz/exploring-fibonacci-based-compression-8713770f5598) — The article that inspired the √Fₙ mode concept
+
+## License
+
+This is a free and open source project.

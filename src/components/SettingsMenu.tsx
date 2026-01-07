@@ -220,8 +220,26 @@ export function SettingsMenu() {
                     </p>
                   </section>
 
-                  {/* Credits */}
-                  <section className="border-t border-border pt-4">
+                  {/* Links */}
+                  <section className="border-t border-border pt-4 space-y-2">
+                    <a 
+                      href="https://zeckendorf.lovable.app"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-2 text-primary hover:underline"
+                    >
+                      <ExternalLink className="h-3 w-3" />
+                      <span className="text-xs">Live App: zeckendorf.lovable.app</span>
+                    </a>
+                    <a 
+                      href="https://github.com/pRizz/zeckendorf-spiral"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-2 text-primary hover:underline"
+                    >
+                      <ExternalLink className="h-3 w-3" />
+                      <span className="text-xs">Source Code on GitHub</span>
+                    </a>
                     <a 
                       href="https://medium.com/@peterryszkiewicz/exploring-fibonacci-based-compression-8713770f5598"
                       target="_blank"
