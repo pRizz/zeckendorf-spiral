@@ -336,7 +336,7 @@ function drawSpiral(
       isFirst = false;
     }
     
-    ctx.arc(center.cx, center.cy, radius, canvasStartAngle, canvasEndAngle, !arc.counterclockwise);
+    ctx.arc(center.cx, center.cy, radius, canvasStartAngle, canvasEndAngle, arc.counterclockwise);
   }
   
   ctx.stroke();
@@ -384,7 +384,7 @@ function drawSpiralPartial(
       isFirst = false;
     }
     
-    ctx.arc(center.cx, center.cy, radius, canvasStartAngle, canvasEndAngle, !arc.counterclockwise);
+    ctx.arc(center.cx, center.cy, radius, canvasStartAngle, canvasEndAngle, arc.counterclockwise);
   }
   
   ctx.stroke();
