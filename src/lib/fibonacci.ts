@@ -181,21 +181,9 @@ function drawSquares(
   ctx.globalAlpha = 1.0;
 }
 
-export function drawFibonacciEvenIndexSquares(
-  canvas: HTMLCanvasElement, 
-  n: number,
-  colors: { stroke: string; fill: string; text: string; origin: string },
-  paddingPx: number = 24
-) {
-  const ctx = canvas.getContext("2d");
-  if (!ctx) return;
-
-  const count = Math.max(0, Math.floor(n));
-  if (count === 0) {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    return;
-  }
-
+function generateSquares(count: number): FibSquare[] {
+  if (count <= 0) return [];
+  
   const maxFibIndex = 2 * count;
   const fib = fibUpToIndex(maxFibIndex);
 
@@ -220,5 +208,174 @@ export function drawFibonacciEvenIndexSquares(
     squares.push(placeNextSquare(prev, nextSize, dir, nextFibIndex));
   }
 
-  drawSquares(ctx, canvas, squares, colors, paddingPx, true);
+  return squares;
+}
+
+function interpolateBounds(from: Bounds, to: Bounds, t: number): Bounds {
+  return {
+    minX: from.minX + (to.minX - from.minX) * t,
+    minY: from.minY + (to.minY - from.minY) * t,
+    maxX: from.maxX + (to.maxX - from.maxX) * t,
+    maxY: from.maxY + (to.maxY - from.maxY) * t,
+  };
+}
+
+function drawSquaresAnimated(
+  ctx: CanvasRenderingContext2D,
+  canvas: HTMLCanvasElement,
+  squares: FibSquare[],
+  interpolatedBounds: Bounds,
+  colors: { stroke: string; fill: string; text: string; origin: string },
+  paddingPx: number,
+  fadeInIndices: Set<number>,
+  fadeOutSquares: FibSquare[],
+  progress: number
+) {
+  const dpr = window.devicePixelRatio || 1;
+  const logicalWidth = canvas.width / dpr;
+  const logicalHeight = canvas.height / dpr;
+
+  const usableW = Math.max(1, logicalWidth - 2 * paddingPx);
+  const usableH = Math.max(1, logicalHeight - 2 * paddingPx);
+  const worldW = Math.max(1e-9, interpolatedBounds.maxX - interpolatedBounds.minX);
+  const worldH = Math.max(1e-9, interpolatedBounds.maxY - interpolatedBounds.minY);
+  const scale = Math.min(usableW / worldW, usableH / worldH);
+
+  const toCanvas = (x: number, y: number) => {
+    const contentW = worldW * scale;
+    const contentH = worldH * scale;
+    const offsetX = paddingPx + (usableW - contentW) / 2;
+    const offsetY = paddingPx + (usableH - contentH) / 2;
+    
+    const cx = offsetX + (x - interpolatedBounds.minX) * scale;
+    const cy = offsetY + (interpolatedBounds.maxY - y) * scale;
+    return { cx, cy };
+  };
+
+  ctx.clearRect(0, 0, logicalWidth, logicalHeight);
+
+  // Origin marker
+  {
+    const { cx, cy } = toCanvas(0, 0);
+    ctx.beginPath();
+    ctx.fillStyle = colors.origin;
+    const markerSize = Math.max(2, Math.min(4, logicalWidth / 200));
+    ctx.arc(cx, cy, markerSize, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  ctx.strokeStyle = colors.stroke;
+  ctx.lineWidth = Math.max(1, Math.min(2, logicalWidth / 400));
+  const baseFontSize = Math.max(8, Math.min(13, logicalWidth / 50));
+
+  // Draw fading out squares first
+  for (const s of fadeOutSquares) {
+    const topLeft = toCanvas(s.x0, s.y1);
+    const w = s.size * scale;
+    const h = s.size * scale;
+    const fadeAlpha = 1 - progress;
+
+    ctx.globalAlpha = 0.08 * fadeAlpha;
+    ctx.fillStyle = colors.fill;
+    ctx.fillRect(topLeft.cx, topLeft.cy, w, h);
+
+    ctx.globalAlpha = fadeAlpha;
+    ctx.strokeRect(topLeft.cx, topLeft.cy, w, h);
+
+    if (w > 35) {
+      ctx.fillStyle = colors.text;
+      ctx.globalAlpha = 0.9 * fadeAlpha;
+      const fontSize = Math.max(8, Math.min(baseFontSize, w / 5));
+      ctx.font = `600 ${fontSize}px "JetBrains Mono", ui-monospace, monospace`;
+      const label = `F${s.fibIndex}=${s.size}`;
+      const labelPadding = Math.max(4, w * 0.06);
+      ctx.fillText(label, topLeft.cx + labelPadding, topLeft.cy + fontSize + labelPadding);
+    }
+  }
+
+  // Draw current squares
+  for (let i = 0; i < squares.length; i++) {
+    const s = squares[i];
+    const topLeft = toCanvas(s.x0, s.y1);
+    const w = s.size * scale;
+    const h = s.size * scale;
+    
+    const isFadingIn = fadeInIndices.has(i);
+    const alpha = isFadingIn ? progress : 1;
+
+    ctx.globalAlpha = 0.08 * alpha;
+    ctx.fillStyle = colors.fill;
+    ctx.fillRect(topLeft.cx, topLeft.cy, w, h);
+
+    ctx.globalAlpha = alpha;
+    ctx.strokeRect(topLeft.cx, topLeft.cy, w, h);
+
+    if (w > 35) {
+      ctx.fillStyle = colors.text;
+      ctx.globalAlpha = 0.9 * alpha;
+      const fontSize = Math.max(8, Math.min(baseFontSize, w / 5));
+      ctx.font = `600 ${fontSize}px "JetBrains Mono", ui-monospace, monospace`;
+      const label = `F${s.fibIndex}=${s.size}`;
+      const labelPadding = Math.max(4, w * 0.06);
+      ctx.fillText(label, topLeft.cx + labelPadding, topLeft.cy + fontSize + labelPadding);
+    }
+  }
+  
+  ctx.globalAlpha = 1.0;
+}
+
+export function drawFibonacciEvenIndexSquaresAnimated(
+  canvas: HTMLCanvasElement,
+  fromCount: number,
+  toCount: number,
+  progress: number,
+  colors: { stroke: string; fill: string; text: string; origin: string },
+  paddingPx: number = 24
+) {
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return;
+
+  const fromSquares = generateSquares(Math.floor(fromCount));
+  const toSquares = generateSquares(Math.floor(toCount));
+
+  if (toSquares.length === 0 && fromSquares.length === 0) {
+    const dpr = window.devicePixelRatio || 1;
+    ctx.clearRect(0, 0, canvas.width / dpr, canvas.height / dpr);
+    return;
+  }
+
+  const fromBounds = fromSquares.length > 0 ? computeBounds(fromSquares) : { minX: 0, minY: 0, maxX: 1, maxY: 1 };
+  const toBounds = toSquares.length > 0 ? computeBounds(toSquares) : { minX: 0, minY: 0, maxX: 1, maxY: 1 };
+  
+  const interpolatedBounds = interpolateBounds(fromBounds, toBounds, progress);
+
+  // Determine which squares are fading in (new ones)
+  const fadeInIndices = new Set<number>();
+  for (let i = fromSquares.length; i < toSquares.length; i++) {
+    fadeInIndices.add(i);
+  }
+
+  // Squares that are fading out (removed ones)
+  const fadeOutSquares = fromSquares.slice(toSquares.length);
+
+  drawSquaresAnimated(
+    ctx,
+    canvas,
+    toSquares,
+    interpolatedBounds,
+    colors,
+    paddingPx,
+    fadeInIndices,
+    fadeOutSquares,
+    progress
+  );
+}
+
+export function drawFibonacciEvenIndexSquares(
+  canvas: HTMLCanvasElement, 
+  n: number,
+  colors: { stroke: string; fill: string; text: string; origin: string },
+  paddingPx: number = 24
+) {
+  drawFibonacciEvenIndexSquaresAnimated(canvas, n, n, 1, colors, paddingPx);
 }
