@@ -123,9 +123,9 @@ function getArcParams(square: FibSquare, index: number): ArcParams {
     case 1:
       return { centerX: x1, centerY: y0, radius: size, startAngle: TAU / 4, endAngle: TAU / 2 };
     case 2:
-      return { centerX: x1, centerY: y1, radius: size, startAngle: TAU / 2, endAngle: TAU * 0.75 };
+      return { centerX: x1, centerY: y1, radius: size, startAngle: TAU / 2, endAngle: 3 / 4 * TAU };
     case 3:
-      return { centerX: x0, centerY: y1, radius: size, startAngle: TAU * 0.75, endAngle: TAU };
+      return { centerX: x0, centerY: y1, radius: size, startAngle: 3 / 4 * TAU, endAngle: TAU };
     default:
       return { centerX: 0, centerY: 0, radius: size, startAngle: 0, endAngle: 0 };
   }
