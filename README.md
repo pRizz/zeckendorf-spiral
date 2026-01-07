@@ -5,6 +5,9 @@ An interactive visualization of Fibonacci squares inspired by Zeckendorf's Theor
 🌐 **Live Demo**: [zeckendorf.lovable.app](https://zeckendorf.lovable.app)  
 📦 **Source Code**: [github.com/pRizz/zeckendorf-spiral](https://github.com/pRizz/zeckendorf-spiral)
 
+## Example of Zeckendorf Spiral with 6 squares
+![Example of Zeckendorf Spiral with 6 squares](examples/6%20Squares.png)
+
 ## Features
 
 - **Interactive Visualization**: Drag a slider to control the number of Fibonacci squares displayed
