@@ -18,6 +18,7 @@ export function FibonacciCanvas({ count }: FibonacciCanvasProps) {
       fill: styles.getPropertyValue('--accent-canvas').trim() || '#d4a574',
       text: styles.getPropertyValue('--canvas-text').trim() || '#a3a3a3',
       origin: styles.getPropertyValue('--canvas-origin').trim() || '#525252',
+      spiral: styles.getPropertyValue('--spiral-color').trim() || '#e8c49a',
     };
   }, []);
 
