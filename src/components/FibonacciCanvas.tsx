@@ -147,7 +147,7 @@ export function FibonacciCanvas({ count }: FibonacciCanvasProps) {
   return (
     <div 
       ref={containerRef} 
-      className="w-full h-full rounded-xl bg-canvas border border-canvas-border overflow-hidden"
+      className="w-full h-full p-4 sm:p-6 rounded-xl bg-canvas border border-canvas-border overflow-hidden"
     >
       <canvas ref={canvasRef} className="block w-full h-full" />
     </div>
