@@ -40,7 +40,7 @@ npm run dev
 
 ## Learn More
 
-- [Exploring Fibonacci-Based Compression](https://medium.com/@peterryszkiewicz/exploring-fibonacci-based-compression-8713770f5598) — The article that inspired the √Fₙ mode concept
+- [Exploring Fibonacci-Based Compression](https://medium.com/@peterryszkiewicz/exploring-fibonacci-based-compression-8713770f5598) — My article explaining using Fibonacci numbers for compression with relationships to Zeckendorf's Theorem
 
 ## License
 
