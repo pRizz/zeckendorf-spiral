@@ -11,6 +11,31 @@ interface SquareSliderProps {
   animationSpeed?: number;
 }
 
+// Attempt to solve cubic bezier at time t using Newton's method
+function cubicBezier(p1x: number, p1y: number, p2x: number, p2y: number, t: number): number {
+  // Calculate the polynomial coefficients
+  const cx = 3 * p1x;
+  const bx = 3 * (p2x - p1x) - cx;
+  const ax = 1 - cx - bx;
+  
+  const cy = 3 * p1y;
+  const by = 3 * (p2y - p1y) - cy;
+  const ay = 1 - cy - by;
+  
+  // Solve for x given t using Newton-Raphson
+  let x = t;
+  for (let i = 0; i < 8; i++) {
+    const xCalc = ((ax * x + bx) * x + cx) * x - t;
+    if (Math.abs(xCalc) < 1e-6) break;
+    const d = (3 * ax * x + 2 * bx) * x + cx;
+    if (Math.abs(d) < 1e-6) break;
+    x -= xCalc / d;
+  }
+  
+  // Return y value
+  return ((ay * x + by) * x + cy) * x;
+}
+
 export function SquareSlider({ value, onChange, min = 1, max = 10, animationSpeed = 1 }: SquareSliderProps) {
   const [isAnimating, setIsAnimating] = useState(false);
   const animationRef = useRef<number | null>(null);
@@ -44,10 +69,8 @@ export function SquareSlider({ value, onChange, min = 1, max = 10, animationSpee
       const elapsed = now - startTimeRef.current;
       const progress = Math.min(elapsed / duration, 1);
       
-      // Ease in-out cubic for smooth animation
-      const eased = progress < 0.5
-        ? 4 * progress * progress * progress
-        : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+      // Custom cubic-bezier(0.25, 0, 0.75, 1) easing
+      const eased = cubicBezier(0.25, 0, 0.75, 1, progress);
       
       const currentValue = startValueRef.current + (targetValueRef.current - startValueRef.current) * eased;
       
