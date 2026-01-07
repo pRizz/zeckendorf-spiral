@@ -34,6 +34,8 @@ An interactive visualization of Fibonacci squares inspired by Zeckendorf's Theor
 - **Theme Support**: Light and dark mode
 - **Customizable Labels**: Show/hide square labels
 - **Animation Speed Control**: Adjust how quickly squares animate
+- **Line Thickness Controls**: Customize spiral and square stroke thickness
+- **Export Options**: Save as PNG or SVG, copy link, or use native sharing
 
 ## The Math
 
