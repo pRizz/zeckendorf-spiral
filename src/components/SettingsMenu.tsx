@@ -1,4 +1,4 @@
-import { Menu, Moon, Sun, Tag, Gauge, SquareRadical, Info, ExternalLink, Minus } from "lucide-react";
+import { Menu, Moon, Sun, Tag, Gauge, SquareRadical, Info, ExternalLink, Minus, Square } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -32,6 +32,8 @@ export function SettingsMenu() {
     setTheme,
     lineThicknessMultiplier,
     setLineThicknessMultiplier,
+    squareStrokeMultiplier,
+    setSquareStrokeMultiplier,
   } = useSettings();
 
   return (
@@ -122,6 +124,33 @@ export function SettingsMenu() {
               <Slider
                 value={[lineThicknessMultiplier]}
                 onValueChange={([val]) => setLineThicknessMultiplier(val)}
+                min={0.25}
+                max={2}
+                step={0.05}
+                className="flex-1"
+              />
+              <span className="text-xs text-muted-foreground font-mono">2×</span>
+            </div>
+          </div>
+
+          <Separator />
+
+          {/* Square Stroke Multiplier */}
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <Square className="h-4 w-4 text-muted-foreground" />
+                <span className="text-sm font-medium">Square Stroke</span>
+              </div>
+              <span className="text-xs text-muted-foreground font-mono">
+                {squareStrokeMultiplier.toFixed(2)}×
+              </span>
+            </div>
+            <div className="flex items-center gap-3 pl-7">
+              <span className="text-xs text-muted-foreground font-mono">0.25×</span>
+              <Slider
+                value={[squareStrokeMultiplier]}
+                onValueChange={([val]) => setSquareStrokeMultiplier(val)}
                 min={0.25}
                 max={2}
                 step={0.05}

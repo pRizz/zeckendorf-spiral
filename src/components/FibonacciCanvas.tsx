@@ -16,7 +16,7 @@ export const FibonacciCanvas = forwardRef<FibonacciCanvasRef, FibonacciCanvasPro
   const containerRef = useRef<HTMLDivElement>(null);
   const animationRef = useRef<number | null>(null);
   const prevCountRef = useRef<number>(count);
-  const { showLabels, useSqrtMode, theme, lineThicknessMultiplier } = useSettings();
+  const { showLabels, useSqrtMode, theme, lineThicknessMultiplier, squareStrokeMultiplier } = useSettings();
 
   useImperativeHandle(ref, () => ({
     getCanvas: () => canvasRef.current,
@@ -76,12 +76,12 @@ export const FibonacciCanvas = forwardRef<FibonacciCanvasRef, FibonacciCanvasPro
     
     // If it's a whole number, just draw that state
     if (floorCount === ceilCount || progress === 0) {
-      drawFibonacciEvenIndexSquaresAnimated(canvas, floorCount, floorCount, 1, colors, padding, showLabels, useSqrtMode, lineThicknessMultiplier);
+      drawFibonacciEvenIndexSquaresAnimated(canvas, floorCount, floorCount, 1, colors, padding, showLabels, useSqrtMode, lineThicknessMultiplier, squareStrokeMultiplier);
     } else {
       // Animate between floor and ceil
-      drawFibonacciEvenIndexSquaresAnimated(canvas, floorCount, ceilCount, progress, colors, padding, showLabels, useSqrtMode, lineThicknessMultiplier);
+      drawFibonacciEvenIndexSquaresAnimated(canvas, floorCount, ceilCount, progress, colors, padding, showLabels, useSqrtMode, lineThicknessMultiplier, squareStrokeMultiplier);
     }
-  }, [setupCanvas, getColors, showLabels, useSqrtMode, lineThicknessMultiplier]);
+  }, [setupCanvas, getColors, showLabels, useSqrtMode, lineThicknessMultiplier, squareStrokeMultiplier]);
 
   // Handle count changes - direct draw for smooth animation from slider
   useEffect(() => {
@@ -121,7 +121,7 @@ export const FibonacciCanvas = forwardRef<FibonacciCanvasRef, FibonacciCanvasPro
         const colors = getColors();
         const padding = Math.min(24, Math.max(12, width * 0.03));
         
-        drawFibonacciEvenIndexSquaresAnimated(canvas, from, to, eased, colors, padding, showLabels, useSqrtMode, lineThicknessMultiplier);
+        drawFibonacciEvenIndexSquaresAnimated(canvas, from, to, eased, colors, padding, showLabels, useSqrtMode, lineThicknessMultiplier, squareStrokeMultiplier);
         
         if (progress < 1) {
           animationRef.current = requestAnimationFrame(tick);
@@ -135,12 +135,12 @@ export const FibonacciCanvas = forwardRef<FibonacciCanvasRef, FibonacciCanvasPro
     }
     
     prevCountRef.current = currentCount;
-  }, [count, draw, setupCanvas, getColors, showLabels, useSqrtMode, lineThicknessMultiplier]);
+  }, [count, draw, setupCanvas, getColors, showLabels, useSqrtMode, lineThicknessMultiplier, squareStrokeMultiplier]);
 
   // Redraw when settings change
   useEffect(() => {
     draw(count);
-  }, [showLabels, useSqrtMode, theme, lineThicknessMultiplier, draw, count]);
+  }, [showLabels, useSqrtMode, theme, lineThicknessMultiplier, squareStrokeMultiplier, draw, count]);
 
   // Handle resize
   useEffect(() => {

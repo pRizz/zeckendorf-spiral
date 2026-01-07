@@ -167,6 +167,7 @@ export interface SvgExportOptions {
   height?: number;
   padding?: number;
   lineThicknessMultiplier?: number;
+  squareStrokeMultiplier?: number;
   colors: {
     background: string;
     stroke: string;
@@ -186,6 +187,7 @@ export function generateSvg(options: SvgExportOptions): string {
     height = 600,
     padding = 24,
     lineThicknessMultiplier = 0.75,
+    squareStrokeMultiplier = 1,
     colors,
   } = options;
 
@@ -224,7 +226,8 @@ export function generateSvg(options: SvgExportOptions): string {
   const markerSize = Math.max(2, Math.min(4, width / 200));
   elements.push(`  <circle cx="${origin.x.toFixed(3)}" cy="${origin.y.toFixed(3)}" r="${markerSize}" fill="${colors.origin}"/>`);
 
-  const lineWidth = Math.max(1, Math.min(2, width / 400));
+  const baseLineWidth = Math.max(1, Math.min(2, width / 400));
+  const squareLineWidth = baseLineWidth * squareStrokeMultiplier;
   const baseFontSize = Math.max(8, Math.min(13, width / 50));
 
   // Draw squares
@@ -237,7 +240,7 @@ export function generateSvg(options: SvgExportOptions): string {
     elements.push(`  <rect x="${topLeft.x.toFixed(3)}" y="${topLeft.y.toFixed(3)}" width="${w.toFixed(3)}" height="${h.toFixed(3)}" fill="${colors.fill}" fill-opacity="0.08" stroke="none"/>`);
     
     // Stroke
-    elements.push(`  <rect x="${topLeft.x.toFixed(3)}" y="${topLeft.y.toFixed(3)}" width="${w.toFixed(3)}" height="${h.toFixed(3)}" fill="none" stroke="${colors.stroke}" stroke-width="${lineWidth}"/>`);
+    elements.push(`  <rect x="${topLeft.x.toFixed(3)}" y="${topLeft.y.toFixed(3)}" width="${w.toFixed(3)}" height="${h.toFixed(3)}" fill="none" stroke="${colors.stroke}" stroke-width="${squareLineWidth}"/>`);
 
     // Label
     if (showLabels && w > 35) {
@@ -256,7 +259,7 @@ export function generateSvg(options: SvgExportOptions): string {
     spiralPaths.push(arcToSvgPath(arc.centerX, arc.centerY, arc.radius, arc.startAngle, arc.endAngle, toSvg, scale, i === 0));
   }
   
-  const spiralLineWidth = lineWidth * 2 * lineThicknessMultiplier;
+  const spiralLineWidth = baseLineWidth * 2 * lineThicknessMultiplier;
   // Add glow effect with filter
   elements.push(`  <defs>
     <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">

@@ -11,6 +11,8 @@ interface SettingsContextType {
   setTheme: (theme: "dark" | "light") => void;
   lineThicknessMultiplier: number;
   setLineThicknessMultiplier: (multiplier: number) => void;
+  squareStrokeMultiplier: number;
+  setSquareStrokeMultiplier: (multiplier: number) => void;
 }
 
 const SettingsContext = createContext<SettingsContextType | null>(null);
@@ -21,6 +23,7 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
   const [useSqrtMode, setUseSqrtMode] = useState(true);
   const [theme, setTheme] = useState<"dark" | "light">("dark");
   const [lineThicknessMultiplier, setLineThicknessMultiplier] = useState(0.75);
+  const [squareStrokeMultiplier, setSquareStrokeMultiplier] = useState(1.0);
 
   // Apply theme to document
   useEffect(() => {
@@ -40,6 +43,8 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
         setTheme,
         lineThicknessMultiplier,
         setLineThicknessMultiplier,
+        squareStrokeMultiplier,
+        setSquareStrokeMultiplier,
       }}
     >
       {children}
