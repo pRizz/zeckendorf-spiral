@@ -11,9 +11,10 @@ import { toast } from "sonner";
 
 interface ShareMenuProps {
   getCanvas: () => HTMLCanvasElement | null;
+  squareCount: number;
 }
 
-export function ShareMenu({ getCanvas }: ShareMenuProps) {
+export function ShareMenu({ getCanvas, squareCount }: ShareMenuProps) {
   const getCanvasDataURL = (format: "png" | "jpeg" = "png"): string | null => {
     const canvas = getCanvas();
     if (!canvas) {
@@ -28,7 +29,7 @@ export function ShareMenu({ getCanvas }: ShareMenuProps) {
     if (!dataURL) return;
 
     const link = document.createElement("a");
-    link.download = "zeckendorf-spiral.png";
+    link.download = `zeckendorf-spiral-${squareCount}-squares.png`;
     link.href = dataURL;
     link.click();
     toast.success("PNG saved!");
@@ -55,7 +56,7 @@ export function ShareMenu({ getCanvas }: ShareMenuProps) {
     const url = URL.createObjectURL(blob);
     
     const link = document.createElement("a");
-    link.download = "zeckendorf-spiral.svg";
+    link.download = `zeckendorf-spiral-${squareCount}-squares.svg`;
     link.href = url;
     link.click();
     
@@ -84,7 +85,7 @@ export function ShareMenu({ getCanvas }: ShareMenuProps) {
           );
           
           if (blob) {
-            const file = new File([blob], "zeckendorf-spiral.png", { type: "image/png" });
+            const file = new File([blob], `zeckendorf-spiral-${squareCount}-squares.png`, { type: "image/png" });
             const shareData = {
               title: "Zeckendorf Spiral",
               text: "Check out this Fibonacci visualization!",
