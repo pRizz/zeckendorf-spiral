@@ -120,11 +120,11 @@ export function SettingsMenu() {
               </span>
             </div>
             <div className="flex items-center gap-3 pl-7">
-              <span className="text-xs text-muted-foreground font-mono">0.25×</span>
+              <span className="text-xs text-muted-foreground font-mono">0.05×</span>
               <Slider
                 value={[lineThicknessMultiplier]}
                 onValueChange={([val]) => setLineThicknessMultiplier(val)}
-                min={0.25}
+                min={0.05}
                 max={2}
                 step={0.05}
                 className="flex-1"
