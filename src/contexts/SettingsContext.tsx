@@ -19,7 +19,7 @@ const SettingsContext = createContext<SettingsContextType | null>(null);
 
 export function SettingsProvider({ children }: { children: ReactNode }) {
   const [showLabels, setShowLabels] = useState(true);
-  const [animationSpeed, setAnimationSpeed] = useState(1.25);
+  const [animationSpeed, setAnimationSpeed] = useState(1.5);
   const [useSqrtMode, setUseSqrtMode] = useState(true);
   const [theme, setTheme] = useState<"dark" | "light">("dark");
   const [lineThicknessMultiplier, setLineThicknessMultiplier] = useState(0.75);
