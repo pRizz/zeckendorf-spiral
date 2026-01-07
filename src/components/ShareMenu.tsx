@@ -17,7 +17,7 @@ interface ShareMenuProps {
 }
 
 export function ShareMenu({ getCanvas, squareCount }: ShareMenuProps) {
-  const { showLabels, useSqrtMode, lineThicknessMultiplier } = useSettings();
+  const { showLabels, useSqrtMode, lineThicknessMultiplier, squareStrokeMultiplier } = useSettings();
   const getCanvasDataURL = (format: "png" | "jpeg" = "png"): string | null => {
     const canvas = getCanvas();
     if (!canvas) {
@@ -64,6 +64,7 @@ export function ShareMenu({ getCanvas, squareCount }: ShareMenuProps) {
       height,
       padding: Math.min(24, Math.max(12, width * 0.03)),
       lineThicknessMultiplier,
+      squareStrokeMultiplier,
       colors: {
         background: getColor('--canvas', '#1a1a1a'),
         stroke: getColor('--accent-canvas', '#d4a574'),

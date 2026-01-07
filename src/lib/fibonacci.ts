@@ -421,7 +421,8 @@ function drawSquaresAnimated(
   progress: number,
   showLabels: boolean = true,
   useSqrtMode: boolean = false,
-  lineThicknessMultiplier: number = 1
+  lineThicknessMultiplier: number = 1,
+  squareStrokeMultiplier: number = 1
 ) {
   const dpr = window.devicePixelRatio || 1;
   const logicalWidth = canvas.width / dpr;
@@ -456,7 +457,8 @@ function drawSquaresAnimated(
     ctx.fill();
   }
 
-  const lineWidth = Math.max(1, Math.min(2, logicalWidth / 400));
+  const baseLineWidth = Math.max(1, Math.min(2, logicalWidth / 400));
+  const lineWidth = baseLineWidth * squareStrokeMultiplier;
   ctx.strokeStyle = colors.stroke;
   ctx.lineWidth = lineWidth;
   const baseFontSize = Math.max(8, Math.min(13, logicalWidth / 50));
@@ -533,18 +535,18 @@ function drawSquaresAnimated(
   // Draw spiral for stable squares (full alpha)
   if (stableSquareCount > 0) {
     const stableSquares = squares.slice(0, stableSquareCount);
-    drawSpiral(ctx, stableSquares, toCanvas, scale, colors.spiral, lineWidth, 1, lineThicknessMultiplier);
+    drawSpiral(ctx, stableSquares, toCanvas, scale, colors.spiral, baseLineWidth, 1, lineThicknessMultiplier);
   }
   
   // Draw fading in spiral arcs for new squares
   if (fadeInIndices.size > 0) {
-    drawSpiralPartial(ctx, squares, stableSquareCount, toCanvas, scale, colors.spiral, lineWidth, progress, lineThicknessMultiplier);
+    drawSpiralPartial(ctx, squares, stableSquareCount, toCanvas, scale, colors.spiral, baseLineWidth, progress, lineThicknessMultiplier);
   }
   
   // Draw fading out spiral arcs for squares being removed
   if (fadeOutSquares.length > 0) {
     const allSquaresForFadeOut = [...squares, ...fadeOutSquares];
-    drawSpiralPartial(ctx, allSquaresForFadeOut, squares.length, toCanvas, scale, colors.spiral, lineWidth, 1 - progress, lineThicknessMultiplier);
+    drawSpiralPartial(ctx, allSquaresForFadeOut, squares.length, toCanvas, scale, colors.spiral, baseLineWidth, 1 - progress, lineThicknessMultiplier);
   }
   
   ctx.globalAlpha = 1.0;
@@ -559,7 +561,8 @@ export function drawFibonacciEvenIndexSquaresAnimated(
   paddingPx: number = 24,
   showLabels: boolean = true,
   useSqrtMode: boolean = false,
-  lineThicknessMultiplier: number = 1
+  lineThicknessMultiplier: number = 1,
+  squareStrokeMultiplier: number = 1
 ) {
   const ctx = canvas.getContext("2d");
   if (!ctx) return;
@@ -599,7 +602,8 @@ export function drawFibonacciEvenIndexSquaresAnimated(
     progress,
     showLabels,
     useSqrtMode,
-    lineThicknessMultiplier
+    lineThicknessMultiplier,
+    squareStrokeMultiplier
   );
 }
 
@@ -610,7 +614,8 @@ export function drawFibonacciEvenIndexSquares(
   paddingPx: number = 24,
   showLabels: boolean = true,
   useSqrtMode: boolean = false,
-  lineThicknessMultiplier: number = 1
+  lineThicknessMultiplier: number = 1,
+  squareStrokeMultiplier: number = 1
 ) {
-  drawFibonacciEvenIndexSquaresAnimated(canvas, n, n, 1, colors, paddingPx, showLabels, useSqrtMode, lineThicknessMultiplier);
+  drawFibonacciEvenIndexSquaresAnimated(canvas, n, n, 1, colors, paddingPx, showLabels, useSqrtMode, lineThicknessMultiplier, squareStrokeMultiplier);
 }
