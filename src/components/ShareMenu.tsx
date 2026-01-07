@@ -10,12 +10,12 @@ import {
 import { toast } from "sonner";
 
 interface ShareMenuProps {
-  canvasRef: React.RefObject<HTMLCanvasElement>;
+  getCanvas: () => HTMLCanvasElement | null;
 }
 
-export function ShareMenu({ canvasRef }: ShareMenuProps) {
+export function ShareMenu({ getCanvas }: ShareMenuProps) {
   const getCanvasDataURL = (format: "png" | "jpeg" = "png"): string | null => {
-    const canvas = canvasRef.current;
+    const canvas = getCanvas();
     if (!canvas) {
       toast.error("Canvas not available");
       return null;
@@ -35,7 +35,7 @@ export function ShareMenu({ canvasRef }: ShareMenuProps) {
   };
 
   const handleSaveSVG = () => {
-    const canvas = canvasRef.current;
+    const canvas = getCanvas();
     if (!canvas) {
       toast.error("Canvas not available");
       return;
@@ -73,7 +73,7 @@ export function ShareMenu({ canvasRef }: ShareMenuProps) {
   };
 
   const handleNativeShare = async () => {
-    const canvas = canvasRef.current;
+    const canvas = getCanvas();
     
     if (navigator.share) {
       try {
