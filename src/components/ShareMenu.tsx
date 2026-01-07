@@ -1,4 +1,4 @@
-import { Share2, Download, Image, FileCode, Link } from "lucide-react";
+import { Share2, Image, FileCode, Link } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -8,6 +8,8 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { toast } from "sonner";
+import { generateSvg } from "@/lib/svgExport";
+import { useSettings } from "@/contexts/SettingsContext";
 
 interface ShareMenuProps {
   getCanvas: () => HTMLCanvasElement | null;
@@ -15,6 +17,7 @@ interface ShareMenuProps {
 }
 
 export function ShareMenu({ getCanvas, squareCount }: ShareMenuProps) {
+  const { showLabels, useSqrtMode } = useSettings();
   const getCanvasDataURL = (format: "png" | "jpeg" = "png"): string | null => {
     const canvas = getCanvas();
     if (!canvas) {
@@ -42,15 +45,33 @@ export function ShareMenu({ getCanvas, squareCount }: ShareMenuProps) {
       return;
     }
 
-    // Get the canvas as a data URL and embed it in an SVG
-    const dataURL = canvas.toDataURL("image/png", 1.0);
-    const width = canvas.width;
-    const height = canvas.height;
+    // Get colors from CSS variables
+    const styles = getComputedStyle(document.documentElement);
+    const getColor = (varName: string, fallback: string) => {
+      const value = styles.getPropertyValue(varName).trim();
+      return value || fallback;
+    };
 
-    const svgContent = `<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
-  <image xlink:href="${dataURL}" width="${width}" height="${height}"/>
-</svg>`;
+    const dpr = window.devicePixelRatio || 1;
+    const width = canvas.width / dpr;
+    const height = canvas.height / dpr;
+
+    const svgContent = generateSvg({
+      count: squareCount,
+      useSqrtMode,
+      showLabels,
+      width,
+      height,
+      padding: Math.min(24, Math.max(12, width * 0.03)),
+      colors: {
+        background: getColor('--canvas', '#1a1a1a'),
+        stroke: getColor('--accent-canvas', '#d4a574'),
+        fill: getColor('--accent-canvas', '#d4a574'),
+        text: getColor('--canvas-text', '#a3a3a3'),
+        origin: getColor('--canvas-origin', '#525252'),
+        spiral: getColor('--spiral-color', '#e8c49a'),
+      },
+    });
 
     const blob = new Blob([svgContent], { type: "image/svg+xml" });
     const url = URL.createObjectURL(blob);
