@@ -1,4 +1,4 @@
-import { Menu, Moon, Sun, Tag, Gauge, SquareRadical, Info, ExternalLink } from "lucide-react";
+import { Menu, Moon, Sun, Tag, Gauge, SquareRadical, Info, ExternalLink, Minus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -30,6 +30,8 @@ export function SettingsMenu() {
     setUseSqrtMode,
     theme,
     setTheme,
+    lineThickness,
+    setLineThickness,
   } = useSettings();
 
   return (
@@ -99,6 +101,28 @@ export function SettingsMenu() {
                 className="flex-1"
               />
               <span className="text-xs text-muted-foreground">Fast</span>
+            </div>
+          </div>
+
+          <Separator />
+
+          {/* Line Thickness */}
+          <div className="space-y-3">
+            <div className="flex items-center gap-3">
+              <Minus className="h-4 w-4 text-muted-foreground" />
+              <span className="text-sm font-medium">Spiral Thickness</span>
+            </div>
+            <div className="flex items-center gap-3 pl-7">
+              <span className="text-xs text-muted-foreground">Thin</span>
+              <Slider
+                value={[lineThickness]}
+                onValueChange={([val]) => setLineThickness(val)}
+                min={0.5}
+                max={2}
+                step={0.25}
+                className="flex-1"
+              />
+              <span className="text-xs text-muted-foreground">Thick</span>
             </div>
           </div>
 

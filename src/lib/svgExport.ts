@@ -166,6 +166,7 @@ export interface SvgExportOptions {
   width?: number;
   height?: number;
   padding?: number;
+  lineThickness?: number;
   colors: {
     background: string;
     stroke: string;
@@ -184,6 +185,7 @@ export function generateSvg(options: SvgExportOptions): string {
     width = 800,
     height = 600,
     padding = 24,
+    lineThickness = 0.75,
     colors,
   } = options;
 
@@ -254,7 +256,7 @@ export function generateSvg(options: SvgExportOptions): string {
     spiralPaths.push(arcToSvgPath(arc.centerX, arc.centerY, arc.radius, arc.startAngle, arc.endAngle, toSvg, scale, i === 0));
   }
   
-  const spiralLineWidth = lineWidth * 2;
+  const spiralLineWidth = lineWidth * 2 * lineThickness;
   // Add glow effect with filter
   elements.push(`  <defs>
     <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">

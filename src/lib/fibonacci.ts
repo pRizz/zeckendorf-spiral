@@ -307,13 +307,14 @@ function drawSpiral(
   scale: number,
   spiralColor: string,
   lineWidth: number,
-  alpha: number = 1
+  alpha: number = 1,
+  lineThickness: number = 1
 ) {
   if (squares.length === 0) return;
   
   ctx.save();
   ctx.strokeStyle = spiralColor;
-  ctx.lineWidth = lineWidth * 2;
+  ctx.lineWidth = lineWidth * 2 * lineThickness;
   ctx.lineCap = 'round';
   ctx.lineJoin = 'round';
   ctx.globalAlpha = alpha;
@@ -362,13 +363,14 @@ function drawSpiralPartial(
   scale: number,
   spiralColor: string,
   lineWidth: number,
-  alpha: number = 1
+  alpha: number = 1,
+  lineThickness: number = 1
 ) {
   if (squares.length === 0 || startIndex >= squares.length) return;
   
   ctx.save();
   ctx.strokeStyle = spiralColor;
-  ctx.lineWidth = lineWidth * 2;
+  ctx.lineWidth = lineWidth * 2 * lineThickness;
   ctx.lineCap = 'round';
   ctx.lineJoin = 'round';
   ctx.globalAlpha = alpha;
@@ -418,7 +420,8 @@ function drawSquaresAnimated(
   fadeOutSquares: FibSquare[],
   progress: number,
   showLabels: boolean = true,
-  useSqrtMode: boolean = false
+  useSqrtMode: boolean = false,
+  lineThickness: number = 1
 ) {
   const dpr = window.devicePixelRatio || 1;
   const logicalWidth = canvas.width / dpr;
@@ -530,18 +533,18 @@ function drawSquaresAnimated(
   // Draw spiral for stable squares (full alpha)
   if (stableSquareCount > 0) {
     const stableSquares = squares.slice(0, stableSquareCount);
-    drawSpiral(ctx, stableSquares, toCanvas, scale, colors.spiral, lineWidth, 1);
+    drawSpiral(ctx, stableSquares, toCanvas, scale, colors.spiral, lineWidth, 1, lineThickness);
   }
   
   // Draw fading in spiral arcs for new squares
   if (fadeInIndices.size > 0) {
-    drawSpiralPartial(ctx, squares, stableSquareCount, toCanvas, scale, colors.spiral, lineWidth, progress);
+    drawSpiralPartial(ctx, squares, stableSquareCount, toCanvas, scale, colors.spiral, lineWidth, progress, lineThickness);
   }
   
   // Draw fading out spiral arcs for squares being removed
   if (fadeOutSquares.length > 0) {
     const allSquaresForFadeOut = [...squares, ...fadeOutSquares];
-    drawSpiralPartial(ctx, allSquaresForFadeOut, squares.length, toCanvas, scale, colors.spiral, lineWidth, 1 - progress);
+    drawSpiralPartial(ctx, allSquaresForFadeOut, squares.length, toCanvas, scale, colors.spiral, lineWidth, 1 - progress, lineThickness);
   }
   
   ctx.globalAlpha = 1.0;
@@ -555,7 +558,8 @@ export function drawFibonacciEvenIndexSquaresAnimated(
   colors: { stroke: string; fill: string; text: string; origin: string; spiral: string },
   paddingPx: number = 24,
   showLabels: boolean = true,
-  useSqrtMode: boolean = false
+  useSqrtMode: boolean = false,
+  lineThickness: number = 1
 ) {
   const ctx = canvas.getContext("2d");
   if (!ctx) return;
@@ -594,7 +598,8 @@ export function drawFibonacciEvenIndexSquaresAnimated(
     fadeOutSquares,
     progress,
     showLabels,
-    useSqrtMode
+    useSqrtMode,
+    lineThickness
   );
 }
 
@@ -604,7 +609,8 @@ export function drawFibonacciEvenIndexSquares(
   colors: { stroke: string; fill: string; text: string; origin: string; spiral: string },
   paddingPx: number = 24,
   showLabels: boolean = true,
-  useSqrtMode: boolean = false
+  useSqrtMode: boolean = false,
+  lineThickness: number = 1
 ) {
-  drawFibonacciEvenIndexSquaresAnimated(canvas, n, n, 1, colors, paddingPx, showLabels, useSqrtMode);
+  drawFibonacciEvenIndexSquaresAnimated(canvas, n, n, 1, colors, paddingPx, showLabels, useSqrtMode, lineThickness);
 }
