@@ -14,7 +14,7 @@ const Index = () => {
             <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-primary/20 flex items-center justify-center">
               <span className="text-primary font-mono font-bold text-xs sm:text-sm">φ</span>
             </div>
-            <h1 className="text-base sm:text-lg font-semibold tracking-tight">Fibonacci Squares</h1>
+            <h1 className="text-base sm:text-lg font-semibold tracking-tight">Zeckendorf Squares</h1>
           </div>
           <span className="text-[10px] sm:text-xs text-muted-foreground font-mono hidden xs:block">
             F<sub>n</sub> = F<sub>n-1</sub> + F<sub>n-2</sub>
