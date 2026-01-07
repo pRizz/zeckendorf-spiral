@@ -8,9 +8,10 @@ interface SquareSliderProps {
   onChange: (value: number) => void;
   min?: number;
   max?: number;
+  animationSpeed?: number;
 }
 
-export function SquareSlider({ value, onChange, min = 1, max = 10 }: SquareSliderProps) {
+export function SquareSlider({ value, onChange, min = 1, max = 10, animationSpeed = 1 }: SquareSliderProps) {
   const [isAnimating, setIsAnimating] = useState(false);
   const animationRef = useRef<number | null>(null);
   const startTimeRef = useRef<number>(0);
@@ -30,8 +31,9 @@ export function SquareSlider({ value, onChange, min = 1, max = 10 }: SquareSlide
     
     if (distance === 0) return;
 
-    // Duration scales with distance: ~1800ms per step
-    const duration = distance * 1800;
+    // Duration scales with distance: base ~1800ms per step, adjusted by speed
+    const baseDuration = 1800 / animationSpeed;
+    const duration = distance * baseDuration;
     
     startValueRef.current = start;
     targetValueRef.current = target;

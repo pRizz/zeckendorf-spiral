@@ -1,5 +1,6 @@
 import { useEffect, useRef, useCallback } from "react";
 import { drawFibonacciEvenIndexSquaresAnimated } from "@/lib/fibonacci";
+import { useSettings } from "@/contexts/SettingsContext";
 
 interface FibonacciCanvasProps {
   count: number;
@@ -10,6 +11,7 @@ export function FibonacciCanvas({ count }: FibonacciCanvasProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const animationRef = useRef<number | null>(null);
   const prevCountRef = useRef<number>(count);
+  const { showLabels, useSqrtMode, theme } = useSettings();
 
   const getColors = useCallback(() => {
     const styles = getComputedStyle(document.documentElement);
@@ -65,12 +67,12 @@ export function FibonacciCanvas({ count }: FibonacciCanvasProps) {
     
     // If it's a whole number, just draw that state
     if (floorCount === ceilCount || progress === 0) {
-      drawFibonacciEvenIndexSquaresAnimated(canvas, floorCount, floorCount, 1, colors, padding);
+      drawFibonacciEvenIndexSquaresAnimated(canvas, floorCount, floorCount, 1, colors, padding, showLabels, useSqrtMode);
     } else {
       // Animate between floor and ceil
-      drawFibonacciEvenIndexSquaresAnimated(canvas, floorCount, ceilCount, progress, colors, padding);
+      drawFibonacciEvenIndexSquaresAnimated(canvas, floorCount, ceilCount, progress, colors, padding, showLabels, useSqrtMode);
     }
-  }, [setupCanvas, getColors]);
+  }, [setupCanvas, getColors, showLabels, useSqrtMode]);
 
   // Handle count changes - direct draw for smooth animation from slider
   useEffect(() => {
@@ -110,7 +112,7 @@ export function FibonacciCanvas({ count }: FibonacciCanvasProps) {
         const colors = getColors();
         const padding = Math.min(24, Math.max(12, width * 0.03));
         
-        drawFibonacciEvenIndexSquaresAnimated(canvas, from, to, eased, colors, padding);
+        drawFibonacciEvenIndexSquaresAnimated(canvas, from, to, eased, colors, padding, showLabels, useSqrtMode);
         
         if (progress < 1) {
           animationRef.current = requestAnimationFrame(tick);
@@ -124,7 +126,12 @@ export function FibonacciCanvas({ count }: FibonacciCanvasProps) {
     }
     
     prevCountRef.current = currentCount;
-  }, [count, draw, setupCanvas, getColors]);
+  }, [count, draw, setupCanvas, getColors, showLabels, useSqrtMode]);
+
+  // Redraw when settings change
+  useEffect(() => {
+    draw(count);
+  }, [showLabels, useSqrtMode, theme, draw, count]);
 
   // Handle resize
   useEffect(() => {

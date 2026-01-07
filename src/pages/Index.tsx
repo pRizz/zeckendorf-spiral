@@ -1,9 +1,12 @@
 import { useState } from "react";
 import { FibonacciCanvas } from "@/components/FibonacciCanvas";
 import { SquareSlider } from "@/components/SquareSlider";
+import { SettingsMenu } from "@/components/SettingsMenu";
+import { useSettings } from "@/contexts/SettingsContext";
 
 const Index = () => {
   const [count, setCount] = useState(5);
+  const { animationSpeed } = useSettings();
 
   return (
     <div className="h-dvh bg-background flex flex-col overflow-hidden">
@@ -16,9 +19,12 @@ const Index = () => {
             </div>
             <h1 className="text-base sm:text-lg font-semibold tracking-tight">Zeckendorf Spiral</h1>
           </div>
-          <span className="text-[10px] sm:text-xs text-muted-foreground font-mono hidden xs:block">
-            F<sub>n</sub> = F<sub>n-1</sub> + F<sub>n-2</sub>
-          </span>
+          <div className="flex items-center gap-2">
+            <span className="text-[10px] sm:text-xs text-muted-foreground font-mono hidden xs:block">
+              F<sub>n</sub> = F<sub>n-1</sub> + F<sub>n-2</sub>
+            </span>
+            <SettingsMenu />
+          </div>
         </div>
       </header>
 
@@ -27,7 +33,7 @@ const Index = () => {
         <div className="max-w-6xl mx-auto w-full flex-1 flex flex-col gap-3 sm:gap-5 min-h-0">
           {/* Controls */}
           <div className="shrink-0 flex justify-center px-2">
-            <SquareSlider value={count} onChange={setCount} />
+            <SquareSlider value={count} onChange={setCount} animationSpeed={animationSpeed} />
           </div>
 
           {/* Canvas - takes remaining space */}
