@@ -109,7 +109,7 @@ export function ShareMenu({ getCanvas, squareCount }: ShareMenuProps) {
             const file = new File([blob], `zeckendorf-spiral-${squareCount}-squares.png`, { type: "image/png" });
             const shareData = {
               title: "Zeckendorf Spiral",
-              text: "Check out this Fibonacci visualization!",
+              text: "Check out this Zeckendorf spiral!",
               url: window.location.href,
               files: [file],
             };
@@ -124,7 +124,7 @@ export function ShareMenu({ getCanvas, squareCount }: ShareMenuProps) {
         // Fallback to sharing just the link
         await navigator.share({
           title: "Zeckendorf Spiral",
-          text: "Check out this Fibonacci visualization!",
+          text: "Check out this Zeckendorf spiral!",
           url: window.location.href,
         });
       } catch (err) {
