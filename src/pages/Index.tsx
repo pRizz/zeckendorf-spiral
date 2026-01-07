@@ -12,7 +12,7 @@ const Index = () => {
         <div className="max-w-6xl mx-auto flex items-center justify-between gap-2">
           <div className="flex items-center gap-2 sm:gap-3">
             <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-primary/20 flex items-center justify-center">
-              <span className="text-primary font-mono font-bold text-xs sm:text-sm">φ</span>
+              <span className="text-primary font-mono font-bold text-xs sm:text-sm">φ<sup>2</sup></span>
             </div>
             <h1 className="text-base sm:text-lg font-semibold tracking-tight">Zeckendorf Squares</h1>
           </div>
