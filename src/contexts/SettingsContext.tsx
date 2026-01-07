@@ -16,7 +16,7 @@ const SettingsContext = createContext<SettingsContextType | null>(null);
 export function SettingsProvider({ children }: { children: ReactNode }) {
   const [showLabels, setShowLabels] = useState(true);
   const [animationSpeed, setAnimationSpeed] = useState(1);
-  const [useSqrtMode, setUseSqrtMode] = useState(false);
+  const [useSqrtMode, setUseSqrtMode] = useState(true);
   const [theme, setTheme] = useState<"dark" | "light">("dark");
 
   // Apply theme to document
