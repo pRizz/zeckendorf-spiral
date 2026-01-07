@@ -54,7 +54,7 @@ const Index = () => {
         <div className="max-w-6xl mx-auto w-full flex-1 flex flex-col gap-3 sm:gap-5 min-h-0">
           {/* Controls */}
           <div className="shrink-0 flex justify-center px-2">
-            <SquareSlider value={count} onChange={setCount} animationSpeed={animationSpeed} />
+            <SquareSlider value={count} onChange={setCount} animationSpeed={animationSpeed} max={22} />
           </div>
 
           {/* Canvas - takes remaining space */}
