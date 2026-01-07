@@ -1,3 +1,5 @@
+import { TAU } from "./constants";
+
 type Direction = "LEFT" | "DOWN" | "RIGHT" | "UP";
 
 type FibSquare = {
@@ -117,13 +119,13 @@ function getArcParams(square: FibSquare, index: number): ArcParams {
   
   switch (cyclePos) {
     case 0:
-      return { centerX: x0, centerY: y0, radius: size, startAngle: 0, endAngle: Math.PI / 2 };
+      return { centerX: x0, centerY: y0, radius: size, startAngle: 0, endAngle: TAU / 4 };
     case 1:
-      return { centerX: x1, centerY: y0, radius: size, startAngle: Math.PI / 2, endAngle: Math.PI };
+      return { centerX: x1, centerY: y0, radius: size, startAngle: TAU / 4, endAngle: TAU / 2 };
     case 2:
-      return { centerX: x1, centerY: y1, radius: size, startAngle: Math.PI, endAngle: Math.PI * 1.5 };
+      return { centerX: x1, centerY: y1, radius: size, startAngle: TAU / 2, endAngle: TAU * 0.75 };
     case 3:
-      return { centerX: x0, centerY: y1, radius: size, startAngle: Math.PI * 1.5, endAngle: Math.PI * 2 };
+      return { centerX: x0, centerY: y1, radius: size, startAngle: TAU * 0.75, endAngle: TAU };
     default:
       return { centerX: 0, centerY: 0, radius: size, startAngle: 0, endAngle: 0 };
   }
