@@ -230,67 +230,65 @@ type ArcParams = {
 };
 
 // Get the arc parameters for each square in the spiral
-// The arcs should be tangent at the edges where squares meet
+// Each arc is a quarter circle that connects outer corners of adjacent squares
+// The spiral flows counterclockwise in world coordinates (Y up)
+// 
+// Pattern for each square (world coords, Y up):
+// - index % 4 == 0: Center at bottom-left (x0,y0), arc from bottom-right to top-left
+// - index % 4 == 1: Center at bottom-right (x1,y0), arc from top-right to bottom-left  
+// - index % 4 == 2: Center at top-right (x1,y1), arc from top-left to bottom-right
+// - index % 4 == 3: Center at top-left (x0,y1), arc from bottom-left to top-right
+//
 function getArcParams(square: FibSquare, index: number): ArcParams {
   const cyclePos = index % 4;
   const { x0, y0, x1, y1, size } = square;
   
-  // In canvas coordinates (after Y flip from world):
-  // - World Y up becomes Canvas Y down
-  // - Canvas: 0 = right, π/2 = down, π = left, 3π/2 = up
-  // 
-  // The spiral should flow continuously. Based on the placement pattern
-  // (LEFT, DOWN, RIGHT, UP), we position arc centers at corners that
-  // create tangent connections at the shared edges.
+  // World coordinate angles (Y goes up):
+  // 0 = right, π/2 = up, π = left, 3π/2 = down
   
   switch (cyclePos) {
     case 0:
-      // First square or cycle restart
-      // Pivot at top-right corner (world), arc sweeps from right edge to top edge
-      // In canvas (Y flipped): top-right (world) = top-right (canvas since x same, y flipped)
-      // Arc from bottom (canvas) to right (canvas)
+      // Center at bottom-left corner
+      // Arc from bottom-right (angle 0) to top-left (angle π/2), counterclockwise
       return {
-        centerX: x1,
-        centerY: y1,
+        centerX: x0,
+        centerY: y0,
         radius: size,
-        startAngle: Math.PI / 2,  // down in canvas = bottom of square
-        endAngle: 0,              // right in canvas = right of square
+        startAngle: 0,            // points to bottom-right
+        endAngle: Math.PI / 2,    // points to top-left
         counterclockwise: true,
       };
     case 1:
-      // After LEFT placement
-      // Pivot at top-left corner (world)
-      // Arc from left edge to top edge
-      return {
-        centerX: x0,
-        centerY: y1,
-        radius: size,
-        startAngle: Math.PI,      // left in canvas
-        endAngle: Math.PI / 2,    // down in canvas
-        counterclockwise: true,
-      };
-    case 2:
-      // After DOWN placement
-      // Pivot at bottom-left corner (world)
-      // Arc from bottom edge to left edge
-      return {
-        centerX: x0,
-        centerY: y0,
-        radius: size,
-        startAngle: Math.PI * 1.5,  // up in canvas = top
-        endAngle: Math.PI,          // left in canvas
-        counterclockwise: true,
-      };
-    case 3:
-      // After RIGHT placement
-      // Pivot at bottom-right corner (world)
-      // Arc from right edge to bottom edge
+      // Center at bottom-right corner
+      // Arc from top-right (angle π/2) to bottom-left (angle π), counterclockwise
       return {
         centerX: x1,
         centerY: y0,
         radius: size,
-        startAngle: 0,              // right in canvas
-        endAngle: Math.PI * 1.5,    // up in canvas
+        startAngle: Math.PI / 2,  // points to top-right
+        endAngle: Math.PI,        // points to bottom-left
+        counterclockwise: true,
+      };
+    case 2:
+      // Center at top-right corner
+      // Arc from top-left (angle π) to bottom-right (angle 3π/2), counterclockwise
+      return {
+        centerX: x1,
+        centerY: y1,
+        radius: size,
+        startAngle: Math.PI,          // points to top-left
+        endAngle: Math.PI * 1.5,      // points to bottom-right
+        counterclockwise: true,
+      };
+    case 3:
+      // Center at top-left corner
+      // Arc from bottom-left (angle 3π/2) to top-right (angle 2π/0), counterclockwise
+      return {
+        centerX: x0,
+        centerY: y1,
+        radius: size,
+        startAngle: Math.PI * 1.5,    // points to bottom-left
+        endAngle: Math.PI * 2,        // points to top-right (same as 0)
         counterclockwise: true,
       };
     default:
