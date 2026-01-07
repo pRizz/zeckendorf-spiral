@@ -30,8 +30,8 @@ export function SquareSlider({ value, onChange, min = 1, max = 10 }: SquareSlide
     
     if (distance === 0) return;
 
-    // Duration scales with distance: ~400ms per step
-    const duration = distance * 400;
+    // Duration scales with distance: ~1200ms per step (3x slower)
+    const duration = distance * 1200;
     
     startValueRef.current = start;
     targetValueRef.current = target;
