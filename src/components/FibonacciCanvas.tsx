@@ -1,4 +1,4 @@
-import { useEffect, useRef, useCallback } from "react";
+import { useEffect, useRef, useCallback, forwardRef, useImperativeHandle } from "react";
 import { drawFibonacciEvenIndexSquaresAnimated } from "@/lib/fibonacci";
 import { useSettings } from "@/contexts/SettingsContext";
 
@@ -6,12 +6,21 @@ interface FibonacciCanvasProps {
   count: number;
 }
 
-export function FibonacciCanvas({ count }: FibonacciCanvasProps) {
+export interface FibonacciCanvasRef {
+  getCanvas: () => HTMLCanvasElement | null;
+}
+
+export const FibonacciCanvas = forwardRef<FibonacciCanvasRef, FibonacciCanvasProps>(
+  function FibonacciCanvas({ count }, ref) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const animationRef = useRef<number | null>(null);
   const prevCountRef = useRef<number>(count);
   const { showLabels, useSqrtMode, theme } = useSettings();
+
+  useImperativeHandle(ref, () => ({
+    getCanvas: () => canvasRef.current,
+  }));
 
   const getColors = useCallback(() => {
     const styles = getComputedStyle(document.documentElement);
@@ -159,4 +168,4 @@ export function FibonacciCanvas({ count }: FibonacciCanvasProps) {
       <canvas ref={canvasRef} className="block w-full h-full" />
     </div>
   );
-}
+});
