@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="518" viewBox="0 0 1120 518">
+  <rect width="1120" height="518" fill="220 20% 6%"/>
+  <circle cx="728.261" cy="362.695" r="4" fill="#525252"/>
+  <rect x="728.261" y="356.981" width="5.714" height="5.714" fill="#d4a574" fill-opacity="0.08" stroke="none"/>
+  <rect x="728.261" y="356.981" width="5.714" height="5.714" fill="none" stroke="#d4a574" stroke-width="2"/>
+  <rect x="718.364" y="356.981" width="9.897" height="9.897" fill="#d4a574" fill-opacity="0.08" stroke="none"/>
+  <rect x="718.364" y="356.981" width="9.897" height="9.897" fill="none" stroke="#d4a574" stroke-width="2"/>
+  <rect x="718.364" y="366.879" width="16.163" height="16.163" fill="#d4a574" fill-opacity="0.08" stroke="none"/>
+  <rect x="718.364" y="366.879" width="16.163" height="16.163" fill="none" stroke="#d4a574" stroke-width="2"/>
+  <rect x="734.526" y="356.855" width="26.186" height="26.186" fill="#d4a574" fill-opacity="0.08" stroke="none"/>
+  <rect x="734.526" y="356.855" width="26.186" height="26.186" fill="none" stroke="#d4a574" stroke-width="2"/>
+  <rect x="718.334" y="314.476" width="42.378" height="42.378" fill="#d4a574" fill-opacity="0.08" stroke="none"/>
+  <rect x="718.334" y="314.476" width="42.378" height="42.378" fill="none" stroke="#d4a574" stroke-width="2"/>
+  <text x="722.334" y="326.952" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="8.475694565873862" font-weight="600" fill="#a3a3a3" fill-opacity="0.9">√F10</text>
+  <rect x="649.762" y="314.476" width="68.572" height="68.572" fill="#d4a574" fill-opacity="0.08" stroke="none"/>
+  <rect x="649.762" y="314.476" width="68.572" height="68.572" fill="none" stroke="#d4a574" stroke-width="2"/>
+  <text x="653.876" y="331.591" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="13" font-weight="600" fill="#a3a3a3" fill-opacity="0.9">√F12</text>
+  <rect x="649.762" y="383.048" width="110.952" height="110.952" fill="#d4a574" fill-opacity="0.08" stroke="none"/>
+  <rect x="649.762" y="383.048" width="110.952" height="110.952" fill="none" stroke="#d4a574" stroke-width="2"/>
+  <text x="656.419" y="402.705" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="13" font-weight="600" fill="#a3a3a3" fill-opacity="0.9">√F14</text>
+  <rect x="760.714" y="314.476" width="179.524" height="179.524" fill="#d4a574" fill-opacity="0.08" stroke="none"/>
+  <rect x="760.714" y="314.476" width="179.524" height="179.524" fill="none" stroke="#d4a574" stroke-width="2"/>
+  <text x="771.485" y="338.247" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="13" font-weight="600" fill="#a3a3a3" fill-opacity="0.9">√F16</text>
+  <rect x="649.762" y="24.000" width="290.476" height="290.476" fill="#d4a574" fill-opacity="0.08" stroke="none"/>
+  <rect x="649.762" y="24.000" width="290.476" height="290.476" fill="none" stroke="#d4a574" stroke-width="2"/>
+  <text x="667.191" y="54.429" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="13" font-weight="600" fill="#a3a3a3" fill-opacity="0.9">√F18</text>
+  <rect x="179.762" y="24.000" width="470.000" height="470.000" fill="#d4a574" fill-opacity="0.08" stroke="none"/>
+  <rect x="179.762" y="24.000" width="470.000" height="470.000" fill="none" stroke="#d4a574" stroke-width="2"/>
+  <text x="207.962" y="65.200" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="13" font-weight="600" fill="#a3a3a3" fill-opacity="0.9">√F20</text>
+  <defs>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="6" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <path d="M 733.975 362.695 A 5.714 5.714 0 0 0 728.261 356.981 A 9.897 9.897 0 0 0 718.364 366.879 A 16.163 16.163 0 0 0 734.526 383.041 A 26.186 26.186 0 0 0 760.712 356.855 A 42.378 42.378 0 0 0 718.334 314.476 A 68.572 68.572 0 0 0 649.762 383.048 A 110.952 110.952 0 0 0 760.714 494.000 A 179.524 179.524 0 0 0 940.238 314.476 A 290.476 290.476 0 0 0 649.762 24.000 A 470.000 470.000 0 0 0 179.762 494.000" fill="none" stroke="#f0d4a8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)"/>
+</svg>

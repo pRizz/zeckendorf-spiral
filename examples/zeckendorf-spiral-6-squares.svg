@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="518" viewBox="0 0 1120 518">
+  <rect width="1120" height="518" fill="220 20% 6%"/>
+  <circle cx="717.808" cy="354.500" r="4" fill="#525252"/>
+  <rect x="717.808" y="315.333" width="39.167" height="39.167" fill="#d4a574" fill-opacity="0.08" stroke="none"/>
+  <rect x="717.808" y="315.333" width="39.167" height="39.167" fill="none" stroke="#d4a574" stroke-width="2"/>
+  <text x="721.808" y="327.333" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="8" font-weight="600" fill="#a3a3a3" fill-opacity="0.9">√F2</text>
+  <rect x="649.970" y="315.333" width="67.839" height="67.839" fill="#d4a574" fill-opacity="0.08" stroke="none"/>
+  <rect x="649.970" y="315.333" width="67.839" height="67.839" fill="none" stroke="#d4a574" stroke-width="2"/>
+  <text x="654.040" y="332.404" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="13" font-weight="600" fill="#a3a3a3" fill-opacity="0.9">√F4</text>
+  <rect x="649.970" y="383.172" width="110.780" height="110.780" fill="#d4a574" fill-opacity="0.08" stroke="none"/>
+  <rect x="649.970" y="383.172" width="110.780" height="110.780" fill="none" stroke="#d4a574" stroke-width="2"/>
+  <text x="656.616" y="402.819" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="13" font-weight="600" fill="#a3a3a3" fill-opacity="0.9">√F6</text>
+  <rect x="760.750" y="314.468" width="179.484" height="179.484" fill="#d4a574" fill-opacity="0.08" stroke="none"/>
+  <rect x="760.750" y="314.468" width="179.484" height="179.484" fill="none" stroke="#d4a574" stroke-width="2"/>
+  <text x="771.519" y="338.237" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="13" font-weight="600" fill="#a3a3a3" fill-opacity="0.9">√F8</text>
+  <rect x="649.766" y="24.000" width="290.468" height="290.468" fill="#d4a574" fill-opacity="0.08" stroke="none"/>
+  <rect x="649.766" y="24.000" width="290.468" height="290.468" fill="none" stroke="#d4a574" stroke-width="2"/>
+  <text x="667.194" y="54.428" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="13" font-weight="600" fill="#a3a3a3" fill-opacity="0.9">√F10</text>
+  <rect x="179.766" y="24.000" width="470.000" height="470.000" fill="#d4a574" fill-opacity="0.08" stroke="none"/>
+  <rect x="179.766" y="24.000" width="470.000" height="470.000" fill="none" stroke="#d4a574" stroke-width="2"/>
+  <text x="207.966" y="65.200" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="13" font-weight="600" fill="#a3a3a3" fill-opacity="0.9">√F12</text>
+  <defs>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="6" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <path d="M 756.975 354.500 A 39.167 39.167 0 0 0 717.808 315.333 A 67.839 67.839 0 0 0 649.970 383.172 A 110.780 110.780 0 0 0 760.750 493.952 A 179.484 179.484 0 0 0 940.234 314.468 A 290.468 290.468 0 0 0 649.766 24.000 A 470.000 470.000 0 0 0 179.766 494.000" fill="none" stroke="#f0d4a8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)"/>
+</svg>

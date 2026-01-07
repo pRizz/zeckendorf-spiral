@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="518" viewBox="0 0 1120 518">
+  <rect width="1120" height="518" fill="220 20% 6%"/>
+  <circle cx="659.323" cy="295.355" r="4" fill="#525252"/>
+  <rect x="659.323" y="24.000" width="271.355" height="271.355" fill="#d4a574" fill-opacity="0.08" stroke="none"/>
+  <rect x="659.323" y="24.000" width="271.355" height="271.355" fill="none" stroke="#d4a574" stroke-width="2"/>
+  <text x="675.604" y="53.281" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="13" font-weight="600" fill="#a3a3a3" fill-opacity="0.9">√F2</text>
+  <rect x="189.323" y="24.000" width="470.000" height="470.000" fill="#d4a574" fill-opacity="0.08" stroke="none"/>
+  <rect x="189.323" y="24.000" width="470.000" height="470.000" fill="none" stroke="#d4a574" stroke-width="2"/>
+  <text x="217.523" y="65.200" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="13" font-weight="600" fill="#a3a3a3" fill-opacity="0.9">√F4</text>
+  <defs>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="6" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <path d="M 930.677 295.355 A 271.355 271.355 0 0 0 659.323 24.000 A 470.000 470.000 0 0 0 189.323 494.000" fill="none" stroke="#f0d4a8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)"/>
+</svg>

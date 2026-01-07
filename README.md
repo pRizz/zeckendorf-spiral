@@ -5,8 +5,22 @@ An interactive visualization of Fibonacci squares inspired by Zeckendorf's Theor
 🌐 **Live Demo**: [zeckendorf.lovable.app](https://zeckendorf.lovable.app)  
 📦 **Source Code**: [github.com/pRizz/zeckendorf-spiral](https://github.com/pRizz/zeckendorf-spiral)
 
-## Example of Zeckendorf Spiral with 6 squares
-![Example of Zeckendorf Spiral with 6 squares](examples/6%20Squares.png)
+## Example of Zeckendorf Spirals
+
+<figure>
+  <img src="examples/zeckendorf-spiral-2-squares.svg" alt="Example of Zeckendorf Spiral with 2 squares" />
+  <figcaption>Zeckendorf Spiral with 2 squares</figcaption>
+</figure>
+
+<figure>
+  <img src="examples/zeckendorf-spiral-6-squares.svg" alt="Example of Zeckendorf Spiral with 6 squares" />
+  <figcaption>Zeckendorf Spiral with 6 squares</figcaption>
+</figure>
+
+<figure>
+  <img src="examples/zeckendorf-spiral-10-squares.svg" alt="Example of Zeckendorf Spiral with 10 squares" />
+  <figcaption>Zeckendorf Spiral with 10 squares</figcaption>
+</figure>
 
 ## Features
 
