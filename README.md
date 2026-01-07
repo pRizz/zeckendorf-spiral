@@ -8,22 +8,22 @@ An interactive visualization of Fibonacci squares inspired by Zeckendorf's Theor
 ## Example of Zeckendorf Spirals
 
 <figure>
-  <img src="examples/zeckendorf-spiral-2-squares.svg" alt="Example of Zeckendorf Spiral with 2 squares" />
   <figcaption style="text-align: center;">Zeckendorf Spiral with 2 squares</figcaption>
+  <img src="examples/zeckendorf-spiral-2-squares.svg" alt="Example of Zeckendorf Spiral with 2 squares" />
 </figure>
 
 <br />
 
 <figure>
-  <img src="examples/zeckendorf-spiral-6-squares.svg" alt="Example of Zeckendorf Spiral with 6 squares" />
   <figcaption style="text-align: center;">Zeckendorf Spiral with 6 squares</figcaption>
+  <img src="examples/zeckendorf-spiral-6-squares.svg" alt="Example of Zeckendorf Spiral with 6 squares" />
 </figure>
 
 <br />
 
 <figure>
-  <img src="examples/zeckendorf-spiral-10-squares.svg" alt="Example of Zeckendorf Spiral with 10 squares" />
   <figcaption style="text-align: center;">Zeckendorf Spiral with 10 squares</figcaption>
+  <img src="examples/zeckendorf-spiral-10-squares.svg" alt="Example of Zeckendorf Spiral with 10 squares" />
 </figure>
 
 ## Features
