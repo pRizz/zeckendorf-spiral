@@ -28,7 +28,7 @@ const Index = () => {
             <span className="text-[10px] sm:text-xs text-muted-foreground font-mono hidden xs:block">
               F<sub>n</sub> = F<sub>n-1</sub> + F<sub>n-2</sub>
             </span>
-            <ShareMenu getCanvas={() => canvasRef.current?.getCanvas() ?? null} />
+            <ShareMenu getCanvas={() => canvasRef.current?.getCanvas() ?? null} squareCount={count} />
             <Button
               variant="ghost"
               size="icon"
