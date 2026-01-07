@@ -46,7 +46,7 @@ export function FibonacciCanvas({ count }: FibonacciCanvasProps) {
     return { width, ctx };
   }, []);
 
-  const animate = useCallback((fromCount: number, toCount: number) => {
+  const draw = useCallback((currentCount: number) => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
@@ -57,74 +57,79 @@ export function FibonacciCanvas({ count }: FibonacciCanvasProps) {
     const colors = getColors();
     const padding = Math.min(24, Math.max(12, width * 0.03));
     
-    const duration = 400; // ms
-    const startTime = performance.now();
+    // Use floor for the "from" state and ceil for "to" state
+    // Progress is the fractional part
+    const floorCount = Math.floor(currentCount);
+    const ceilCount = Math.ceil(currentCount);
+    const progress = currentCount - floorCount;
     
-    const tick = (now: number) => {
-      const elapsed = now - startTime;
-      const progress = Math.min(elapsed / duration, 1);
-      
-      // Ease out cubic for smooth deceleration
-      const eased = 1 - Math.pow(1 - progress, 3);
-      
-      drawFibonacciEvenIndexSquaresAnimated(
-        canvas,
-        fromCount,
-        toCount,
-        eased,
-        colors,
-        padding
-      );
-      
-      if (progress < 1) {
-        animationRef.current = requestAnimationFrame(tick);
-      }
-    };
-    
-    if (animationRef.current) {
-      cancelAnimationFrame(animationRef.current);
+    // If it's a whole number, just draw that state
+    if (floorCount === ceilCount || progress === 0) {
+      drawFibonacciEvenIndexSquaresAnimated(canvas, floorCount, floorCount, 1, colors, padding);
+    } else {
+      // Animate between floor and ceil
+      drawFibonacciEvenIndexSquaresAnimated(canvas, floorCount, ceilCount, progress, colors, padding);
     }
-    
-    animationRef.current = requestAnimationFrame(tick);
   }, [setupCanvas, getColors]);
 
-  // Handle count changes with animation
+  // Handle count changes - direct draw for smooth animation from slider
   useEffect(() => {
-    const prevCount = prevCountRef.current;
-    
-    if (prevCount !== count) {
-      animate(prevCount, count);
-      prevCountRef.current = count;
-    } else {
-      // Initial draw or resize
-      const canvas = canvasRef.current;
-      if (!canvas) return;
-      
-      const result = setupCanvas();
-      if (!result) return;
-      
-      const { width } = result;
-      const colors = getColors();
-      const padding = Math.min(24, Math.max(12, width * 0.03));
-      
-      drawFibonacciEvenIndexSquaresAnimated(canvas, count, count, 1, colors, padding);
+    // Cancel any pending internal animation
+    if (animationRef.current) {
+      cancelAnimationFrame(animationRef.current);
+      animationRef.current = null;
     }
-  }, [count, animate, setupCanvas, getColors]);
+    
+    const prevCount = prevCountRef.current;
+    const currentCount = count;
+    
+    // Check if this is a discrete step (user clicking slider) vs continuous animation
+    const isDiscreteStep = Number.isInteger(currentCount) && 
+                           Number.isInteger(prevCount) && 
+                           Math.abs(currentCount - prevCount) === 1;
+    
+    if (isDiscreteStep) {
+      // Animate the discrete step
+      const duration = 300;
+      const startTime = performance.now();
+      const from = prevCount;
+      const to = currentCount;
+      
+      const tick = (now: number) => {
+        const elapsed = now - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        
+        const canvas = canvasRef.current;
+        if (!canvas) return;
+        
+        const result = setupCanvas();
+        if (!result) return;
+        
+        const { width } = result;
+        const colors = getColors();
+        const padding = Math.min(24, Math.max(12, width * 0.03));
+        
+        drawFibonacciEvenIndexSquaresAnimated(canvas, from, to, eased, colors, padding);
+        
+        if (progress < 1) {
+          animationRef.current = requestAnimationFrame(tick);
+        }
+      };
+      
+      animationRef.current = requestAnimationFrame(tick);
+    } else {
+      // Continuous update from slider animation - draw directly
+      draw(currentCount);
+    }
+    
+    prevCountRef.current = currentCount;
+  }, [count, draw, setupCanvas, getColors]);
 
   // Handle resize
   useEffect(() => {
     const handleResize = () => {
-      const canvas = canvasRef.current;
-      if (!canvas) return;
-      
-      const result = setupCanvas();
-      if (!result) return;
-      
-      const { width } = result;
-      const colors = getColors();
-      const padding = Math.min(24, Math.max(12, width * 0.03));
-      
-      drawFibonacciEvenIndexSquaresAnimated(canvas, count, count, 1, colors, padding);
+      draw(count);
     };
     
     window.addEventListener("resize", handleResize);
@@ -137,7 +142,7 @@ export function FibonacciCanvas({ count }: FibonacciCanvasProps) {
         cancelAnimationFrame(animationRef.current);
       }
     };
-  }, [count, setupCanvas, getColors]);
+  }, [count, draw]);
 
   return (
     <div 
