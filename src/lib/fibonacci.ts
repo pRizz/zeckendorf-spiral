@@ -181,7 +181,7 @@ function drawSquares(
   ctx.globalAlpha = 1.0;
 }
 
-function generateSquares(count: number): FibSquare[] {
+function generateSquares(count: number, useSqrtMode: boolean = false): FibSquare[] {
   if (count <= 0) return [];
   
   const maxFibIndex = 2 * count;
@@ -190,7 +190,8 @@ function generateSquares(count: number): FibSquare[] {
   const squares: FibSquare[] = [];
 
   const firstIndex = 2;
-  const firstSize = fib[firstIndex] ?? 1;
+  const rawSize = fib[firstIndex] ?? 1;
+  const firstSize = useSqrtMode ? Math.sqrt(rawSize) : rawSize;
   squares.push({
     fibIndex: firstIndex,
     size: firstSize,
@@ -202,7 +203,8 @@ function generateSquares(count: number): FibSquare[] {
 
   for (let i = 1; i < count; i++) {
     const nextFibIndex = 2 + 2 * i;
-    const nextSize = fib[nextFibIndex]!;
+    const rawNextSize = fib[nextFibIndex]!;
+    const nextSize = useSqrtMode ? Math.sqrt(rawNextSize) : rawNextSize;
     const prev = squares[squares.length - 1]!;
     const dir = directionForStep(i);
     squares.push(placeNextSquare(prev, nextSize, dir, nextFibIndex));
@@ -412,7 +414,9 @@ function drawSquaresAnimated(
   paddingPx: number,
   fadeInIndices: Set<number>,
   fadeOutSquares: FibSquare[],
-  progress: number
+  progress: number,
+  showLabels: boolean = true,
+  useSqrtMode: boolean = false
 ) {
   const dpr = window.devicePixelRatio || 1;
   const logicalWidth = canvas.width / dpr;
@@ -452,6 +456,14 @@ function drawSquaresAnimated(
   ctx.lineWidth = lineWidth;
   const baseFontSize = Math.max(8, Math.min(13, logicalWidth / 50));
 
+  // Helper to format label based on mode
+  const formatLabel = (s: FibSquare) => {
+    if (useSqrtMode) {
+      return `√F${s.fibIndex}`;
+    }
+    return `F${s.fibIndex}=${Math.round(s.size)}`;
+  };
+
   // Draw fading out squares first
   for (const s of fadeOutSquares) {
     const topLeft = toCanvas(s.x0, s.y1);
@@ -466,12 +478,12 @@ function drawSquaresAnimated(
     ctx.globalAlpha = fadeAlpha;
     ctx.strokeRect(topLeft.cx, topLeft.cy, w, h);
 
-    if (w > 35) {
+    if (showLabels && w > 35) {
       ctx.fillStyle = colors.text;
       ctx.globalAlpha = 0.9 * fadeAlpha;
       const fontSize = Math.max(8, Math.min(baseFontSize, w / 5));
       ctx.font = `600 ${fontSize}px "JetBrains Mono", ui-monospace, monospace`;
-      const label = `F${s.fibIndex}=${s.size}`;
+      const label = formatLabel(s);
       const labelPadding = Math.max(4, w * 0.06);
       ctx.fillText(label, topLeft.cx + labelPadding, topLeft.cy + fontSize + labelPadding);
     }
@@ -496,12 +508,12 @@ function drawSquaresAnimated(
     ctx.lineWidth = lineWidth;
     ctx.strokeRect(topLeft.cx, topLeft.cy, w, h);
 
-    if (w > 35) {
+    if (showLabels && w > 35) {
       ctx.fillStyle = colors.text;
       ctx.globalAlpha = 0.9 * alpha;
       const fontSize = Math.max(8, Math.min(baseFontSize, w / 5));
       ctx.font = `600 ${fontSize}px "JetBrains Mono", ui-monospace, monospace`;
-      const label = `F${s.fibIndex}=${s.size}`;
+      const label = formatLabel(s);
       const labelPadding = Math.max(4, w * 0.06);
       ctx.fillText(label, topLeft.cx + labelPadding, topLeft.cy + fontSize + labelPadding);
     }
@@ -539,13 +551,15 @@ export function drawFibonacciEvenIndexSquaresAnimated(
   toCount: number,
   progress: number,
   colors: { stroke: string; fill: string; text: string; origin: string; spiral: string },
-  paddingPx: number = 24
+  paddingPx: number = 24,
+  showLabels: boolean = true,
+  useSqrtMode: boolean = false
 ) {
   const ctx = canvas.getContext("2d");
   if (!ctx) return;
 
-  const fromSquares = generateSquares(Math.floor(fromCount));
-  const toSquares = generateSquares(Math.floor(toCount));
+  const fromSquares = generateSquares(Math.floor(fromCount), useSqrtMode);
+  const toSquares = generateSquares(Math.floor(toCount), useSqrtMode);
 
   if (toSquares.length === 0 && fromSquares.length === 0) {
     const dpr = window.devicePixelRatio || 1;
@@ -576,7 +590,9 @@ export function drawFibonacciEvenIndexSquaresAnimated(
     paddingPx,
     fadeInIndices,
     fadeOutSquares,
-    progress
+    progress,
+    showLabels,
+    useSqrtMode
   );
 }
 
@@ -584,7 +600,9 @@ export function drawFibonacciEvenIndexSquares(
   canvas: HTMLCanvasElement, 
   n: number,
   colors: { stroke: string; fill: string; text: string; origin: string; spiral: string },
-  paddingPx: number = 24
+  paddingPx: number = 24,
+  showLabels: boolean = true,
+  useSqrtMode: boolean = false
 ) {
-  drawFibonacciEvenIndexSquaresAnimated(canvas, n, n, 1, colors, paddingPx);
+  drawFibonacciEvenIndexSquaresAnimated(canvas, n, n, 1, colors, paddingPx, showLabels, useSqrtMode);
 }
