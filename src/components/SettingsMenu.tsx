@@ -1,4 +1,4 @@
-import { Menu, Moon, Sun, Tag, Gauge, SquareRadical, Info, ExternalLink, Minus, Square } from "lucide-react";
+import { Menu, Moon, Sun, Tag, Gauge, SquareRadical, Info, ExternalLink, Minus, Square, Crosshair } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -34,6 +34,8 @@ export function SettingsMenu() {
     setLineThicknessMultiplier,
     squareStrokeMultiplier,
     setSquareStrokeMultiplier,
+    lockOrigin,
+    setLockOrigin,
   } = useSettings();
 
   return (
@@ -158,6 +160,25 @@ export function SettingsMenu() {
               />
               <span className="text-xs text-muted-foreground font-mono">2×</span>
             </div>
+          </div>
+
+          <Separator />
+
+          {/* Lock Origin Toggle */}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <Crosshair className="h-4 w-4 text-muted-foreground" />
+              <div className="flex flex-col">
+                <span className="text-sm font-medium">Lock Origin</span>
+                <span className="text-xs text-muted-foreground">
+                  Keep (0,0) centered
+                </span>
+              </div>
+            </div>
+            <Switch
+              checked={lockOrigin}
+              onCheckedChange={setLockOrigin}
+            />
           </div>
 
           <Separator />

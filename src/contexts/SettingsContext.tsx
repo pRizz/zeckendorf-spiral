@@ -13,6 +13,8 @@ interface SettingsContextType {
   setLineThicknessMultiplier: (multiplier: number) => void;
   squareStrokeMultiplier: number;
   setSquareStrokeMultiplier: (multiplier: number) => void;
+  lockOrigin: boolean;
+  setLockOrigin: (lock: boolean) => void;
 }
 
 const SettingsContext = createContext<SettingsContextType | null>(null);
@@ -24,6 +26,7 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
   const [theme, setTheme] = useState<"dark" | "light">("dark");
   const [lineThicknessMultiplier, setLineThicknessMultiplier] = useState(0.75);
   const [squareStrokeMultiplier, setSquareStrokeMultiplier] = useState(1.0);
+  const [lockOrigin, setLockOrigin] = useState(true);
 
   // Apply theme to document
   useEffect(() => {
@@ -45,6 +48,8 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
         setLineThicknessMultiplier,
         squareStrokeMultiplier,
         setSquareStrokeMultiplier,
+        lockOrigin,
+        setLockOrigin,
       }}
     >
       {children}
