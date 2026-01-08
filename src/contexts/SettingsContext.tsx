@@ -26,7 +26,7 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
   const [theme, setTheme] = useState<"dark" | "light">("dark");
   const [lineThicknessMultiplier, setLineThicknessMultiplier] = useState(0.75);
   const [squareStrokeMultiplier, setSquareStrokeMultiplier] = useState(1.0);
-  const [lockOrigin, setLockOrigin] = useState(true);
+  const [lockOrigin, setLockOrigin] = useState(false);
 
   // Apply theme to document
   useEffect(() => {
