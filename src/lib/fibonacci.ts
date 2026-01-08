@@ -422,7 +422,8 @@ function drawSquaresAnimated(
   showLabels: boolean = true,
   useSqrtMode: boolean = false,
   lineThicknessMultiplier: number = 1,
-  squareStrokeMultiplier: number = 1
+  squareStrokeMultiplier: number = 1,
+  lockOrigin: boolean = true
 ) {
   const dpr = window.devicePixelRatio || 1;
   const logicalWidth = canvas.width / dpr;
@@ -430,19 +431,42 @@ function drawSquaresAnimated(
 
   const usableW = Math.max(1, logicalWidth - 2 * paddingPx);
   const usableH = Math.max(1, logicalHeight - 2 * paddingPx);
-  const worldW = Math.max(1e-9, interpolatedBounds.maxX - interpolatedBounds.minX);
-  const worldH = Math.max(1e-9, interpolatedBounds.maxY - interpolatedBounds.minY);
-  const scale = Math.min(usableW / worldW, usableH / worldH);
+  
+  let worldW: number, worldH: number, scale: number;
+  
+  if (lockOrigin) {
+    // In lock origin mode, we need to ensure origin (0,0) is centered
+    // and all content is visible. Calculate the max extent from origin.
+    const maxExtentX = Math.max(Math.abs(interpolatedBounds.minX), Math.abs(interpolatedBounds.maxX));
+    const maxExtentY = Math.max(Math.abs(interpolatedBounds.minY), Math.abs(interpolatedBounds.maxY));
+    // World spans from -maxExtent to +maxExtent in both directions
+    worldW = maxExtentX * 2;
+    worldH = maxExtentY * 2;
+    scale = Math.min(usableW / Math.max(1e-9, worldW), usableH / Math.max(1e-9, worldH));
+  } else {
+    worldW = Math.max(1e-9, interpolatedBounds.maxX - interpolatedBounds.minX);
+    worldH = Math.max(1e-9, interpolatedBounds.maxY - interpolatedBounds.minY);
+    scale = Math.min(usableW / worldW, usableH / worldH);
+  }
 
   const toCanvas = (x: number, y: number) => {
-    const contentW = worldW * scale;
-    const contentH = worldH * scale;
-    const offsetX = paddingPx + (usableW - contentW) / 2;
-    const offsetY = paddingPx + (usableH - contentH) / 2;
-    
-    const cx = offsetX + (x - interpolatedBounds.minX) * scale;
-    const cy = offsetY + (interpolatedBounds.maxY - y) * scale;
-    return { cx, cy };
+    if (lockOrigin) {
+      // Origin (0,0) is at center of canvas
+      const centerX = logicalWidth / 2;
+      const centerY = logicalHeight / 2;
+      const cx = centerX + x * scale;
+      const cy = centerY - y * scale; // Y is flipped for canvas coordinates
+      return { cx, cy };
+    } else {
+      const contentW = worldW * scale;
+      const contentH = worldH * scale;
+      const offsetX = paddingPx + (usableW - contentW) / 2;
+      const offsetY = paddingPx + (usableH - contentH) / 2;
+      
+      const cx = offsetX + (x - interpolatedBounds.minX) * scale;
+      const cy = offsetY + (interpolatedBounds.maxY - y) * scale;
+      return { cx, cy };
+    }
   };
 
   ctx.clearRect(0, 0, logicalWidth, logicalHeight);
@@ -562,7 +586,8 @@ export function drawFibonacciEvenIndexSquaresAnimated(
   showLabels: boolean = true,
   useSqrtMode: boolean = false,
   lineThicknessMultiplier: number = 1,
-  squareStrokeMultiplier: number = 1
+  squareStrokeMultiplier: number = 1,
+  lockOrigin: boolean = true
 ) {
   const ctx = canvas.getContext("2d");
   if (!ctx) return;
@@ -603,7 +628,8 @@ export function drawFibonacciEvenIndexSquaresAnimated(
     showLabels,
     useSqrtMode,
     lineThicknessMultiplier,
-    squareStrokeMultiplier
+    squareStrokeMultiplier,
+    lockOrigin
   );
 }
 
