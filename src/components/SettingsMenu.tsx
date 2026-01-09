@@ -1,4 +1,4 @@
-import { Menu, Moon, Sun, Tag, Gauge, SquareRadical, Info, ExternalLink, Minus, Square, Crosshair } from "lucide-react";
+import { Menu, Moon, Sun, Tag, Gauge, SquareRadical, Info, ExternalLink, Minus, Square, Crosshair, Spline } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -36,6 +36,8 @@ export function SettingsMenu() {
     setSquareStrokeMultiplier,
     lockOrigin,
     setLockOrigin,
+    spiralStrategy,
+    setSpiralStrategy,
   } = useSettings();
 
   return (
@@ -179,6 +181,25 @@ export function SettingsMenu() {
             <Switch
               checked={lockOrigin}
               onCheckedChange={setLockOrigin}
+            />
+          </div>
+
+          <Separator />
+
+          {/* Spiral Curve Type Toggle */}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <Spline className="h-4 w-4 text-muted-foreground" />
+              <div className="flex flex-col">
+                <span className="text-sm font-medium">Bézier Curves</span>
+                <span className="text-xs text-muted-foreground">
+                  Use Bézier instead of arcs
+                </span>
+              </div>
+            </div>
+            <Switch
+              checked={spiralStrategy === 'bezier'}
+              onCheckedChange={(checked) => setSpiralStrategy(checked ? 'bezier' : 'quarterArc')}
             />
           </div>
 

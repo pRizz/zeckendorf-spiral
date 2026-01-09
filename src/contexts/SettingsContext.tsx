@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import type { SpiralStrategy } from "@/lib/spiralStrategies";
 
 interface SettingsContextType {
   showLabels: boolean;
@@ -15,6 +16,8 @@ interface SettingsContextType {
   setSquareStrokeMultiplier: (multiplier: number) => void;
   lockOrigin: boolean;
   setLockOrigin: (lock: boolean) => void;
+  spiralStrategy: SpiralStrategy;
+  setSpiralStrategy: (strategy: SpiralStrategy) => void;
 }
 
 const SettingsContext = createContext<SettingsContextType | null>(null);
@@ -27,6 +30,7 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
   const [lineThicknessMultiplier, setLineThicknessMultiplier] = useState(0.75);
   const [squareStrokeMultiplier, setSquareStrokeMultiplier] = useState(1.0);
   const [lockOrigin, setLockOrigin] = useState(false);
+  const [spiralStrategy, setSpiralStrategy] = useState<SpiralStrategy>('quarterArc');
 
   // Apply theme to document
   useEffect(() => {
@@ -50,6 +54,8 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
         setSquareStrokeMultiplier,
         lockOrigin,
         setLockOrigin,
+        spiralStrategy,
+        setSpiralStrategy,
       }}
     >
       {children}

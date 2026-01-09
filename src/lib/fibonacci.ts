@@ -281,7 +281,8 @@ function drawSquaresAnimated(
   useSqrtMode: boolean = false,
   lineThicknessMultiplier: number = 1,
   squareStrokeMultiplier: number = 1,
-  lockOrigin: boolean = true
+  lockOrigin: boolean = true,
+  spiralStrategy: SpiralStrategy = 'quarterArc'
 ) {
   const dpr = window.devicePixelRatio || 1;
   const logicalWidth = canvas.width / dpr;
@@ -417,18 +418,18 @@ function drawSquaresAnimated(
   // Draw spiral for stable squares (full alpha)
   if (stableSquareCount > 0) {
     const stableSquares = squares.slice(0, stableSquareCount);
-    drawSpiral(ctx, stableSquares, toCanvas, scale, colors.spiral, baseLineWidth, 1, lineThicknessMultiplier);
+    drawSpiral(ctx, stableSquares, toCanvas, scale, colors.spiral, baseLineWidth, 1, lineThicknessMultiplier, spiralStrategy);
   }
   
   // Draw fading in spiral arcs for new squares
   if (fadeInIndices.size > 0) {
-    drawSpiralPartial(ctx, squares, stableSquareCount, toCanvas, scale, colors.spiral, baseLineWidth, progress, lineThicknessMultiplier);
+    drawSpiralPartial(ctx, squares, stableSquareCount, toCanvas, scale, colors.spiral, baseLineWidth, progress, lineThicknessMultiplier, spiralStrategy);
   }
   
   // Draw fading out spiral arcs for squares being removed
   if (fadeOutSquares.length > 0) {
     const allSquaresForFadeOut = [...squares, ...fadeOutSquares];
-    drawSpiralPartial(ctx, allSquaresForFadeOut, squares.length, toCanvas, scale, colors.spiral, baseLineWidth, 1 - progress, lineThicknessMultiplier);
+    drawSpiralPartial(ctx, allSquaresForFadeOut, squares.length, toCanvas, scale, colors.spiral, baseLineWidth, 1 - progress, lineThicknessMultiplier, spiralStrategy);
   }
   
   ctx.globalAlpha = 1.0;
@@ -452,7 +453,8 @@ export function drawFibonacciEvenIndexSquaresAnimated(
   useSqrtMode: boolean = false,
   lineThicknessMultiplier: number = 1,
   squareStrokeMultiplier: number = 1,
-  lockOrigin: boolean = true
+  lockOrigin: boolean = true,
+  spiralStrategy: SpiralStrategy = 'quarterArc'
 ) {
   const ctx = canvas.getContext("2d");
   if (!ctx) return;
@@ -514,7 +516,8 @@ export function drawFibonacciEvenIndexSquaresAnimated(
     useSqrtMode,
     lineThicknessMultiplier,
     squareStrokeMultiplier,
-    lockOrigin
+    lockOrigin,
+    spiralStrategy
   );
 }
 
