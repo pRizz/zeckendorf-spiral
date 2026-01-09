@@ -576,6 +576,13 @@ function drawSquaresAnimated(
   ctx.globalAlpha = 1.0;
 }
 
+// Compute the max extent from origin for locked origin mode
+function computeOriginExtent(bounds: Bounds): number {
+  const maxExtentX = Math.max(Math.abs(bounds.minX), Math.abs(bounds.maxX));
+  const maxExtentY = Math.max(Math.abs(bounds.minY), Math.abs(bounds.maxY));
+  return Math.max(maxExtentX, maxExtentY);
+}
+
 export function drawFibonacciEvenIndexSquaresAnimated(
   canvas: HTMLCanvasElement,
   fromCount: number,
@@ -604,7 +611,27 @@ export function drawFibonacciEvenIndexSquaresAnimated(
   const fromBounds = fromSquares.length > 0 ? computeBounds(fromSquares) : { minX: 0, minY: 0, maxX: 1, maxY: 1 };
   const toBounds = toSquares.length > 0 ? computeBounds(toSquares) : { minX: 0, minY: 0, maxX: 1, maxY: 1 };
   
-  const interpolatedBounds = interpolateBounds(fromBounds, toBounds, progress);
+  let interpolatedBounds: Bounds;
+  
+  if (lockOrigin) {
+    // For locked origin mode, interpolate the extent from origin between start and end states only
+    // This prevents erratic zooming during intermediate animation frames
+    const fromExtent = computeOriginExtent(fromBounds);
+    const toExtent = computeOriginExtent(toBounds);
+    const interpolatedExtent = fromExtent + (toExtent - fromExtent) * progress;
+    
+    // Create synthetic bounds that represent this interpolated extent
+    // The actual content bounds don't matter for scaling in lock origin mode,
+    // only the extent from origin matters
+    interpolatedBounds = {
+      minX: -interpolatedExtent,
+      minY: -interpolatedExtent,
+      maxX: interpolatedExtent,
+      maxY: interpolatedExtent,
+    };
+  } else {
+    interpolatedBounds = interpolateBounds(fromBounds, toBounds, progress);
+  }
 
   // Determine which squares are fading in (new ones)
   const fadeInIndices = new Set<number>();
