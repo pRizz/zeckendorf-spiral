@@ -18,7 +18,11 @@ export type ArcParams = {
   counterclockwise: boolean;
 };
 
-export type SpiralStrategy = 'quarterArc' | 'diagonal';
+export type SpiralStrategy = 'quarterArc' | 'bezier';
+
+// Magic number for approximating a quarter circle with a cubic Bézier curve
+// k = 4/3 * (√2 - 1) ≈ 0.5522847498
+const BEZIER_QUARTER_CIRCLE_K = 4 / 3 * (Math.sqrt(2) - 1);
 
 /**
  * Get arc parameters using the classic quarter-arc method.
@@ -40,47 +44,39 @@ function getQuarterArcParams(square: FibSquare, index: number): ArcParams {
   
   switch (cyclePos) {
     case 0:
-      // Center at bottom-left corner
-      // Arc from bottom-right (angle 0) to top-left (angle τ/4), counterclockwise
       return {
         centerX: x0,
         centerY: y0,
         radius: size,
-        startAngle: 0,              // points to bottom-right
-        endAngle: TAU / 4,          // points to top-left
+        startAngle: 0,
+        endAngle: TAU / 4,
         counterclockwise: true,
       };
     case 1:
-      // Center at bottom-right corner
-      // Arc from top-right (angle τ/4) to bottom-left (angle τ/2), counterclockwise
       return {
         centerX: x1,
         centerY: y0,
         radius: size,
-        startAngle: TAU / 4,        // points to top-right
-        endAngle: TAU / 2,          // points to bottom-left
+        startAngle: TAU / 4,
+        endAngle: TAU / 2,
         counterclockwise: true,
       };
     case 2:
-      // Center at top-right corner
-      // Arc from top-left (angle τ/2) to bottom-right (angle 3τ/4), counterclockwise
       return {
         centerX: x1,
         centerY: y1,
         radius: size,
-        startAngle: TAU / 2,        // points to top-left
-        endAngle: 3 / 4 * TAU,      // points to bottom-right
+        startAngle: TAU / 2,
+        endAngle: 3 / 4 * TAU,
         counterclockwise: true,
       };
     case 3:
-      // Center at top-left corner
-      // Arc from bottom-left (angle 3τ/4) to top-right (angle τ), counterclockwise
       return {
         centerX: x0,
         centerY: y1,
         radius: size,
-        startAngle: 3 / 4 * TAU,    // points to bottom-left
-        endAngle: TAU,              // points to top-right (same as 0)
+        startAngle: 3 / 4 * TAU,
+        endAngle: TAU,
         counterclockwise: true,
       };
     default:
@@ -94,9 +90,50 @@ function getQuarterArcParams(square: FibSquare, index: number): ArcParams {
 export function getArcParams(square: FibSquare, index: number, strategy: SpiralStrategy = 'quarterArc'): ArcParams {
   switch (strategy) {
     case 'quarterArc':
+    case 'bezier':
     default:
+      // Both strategies use the same arc params, they differ in rendering
       return getQuarterArcParams(square, index);
   }
+}
+
+/**
+ * Draw a quarter circle arc using a cubic Bézier curve approximation.
+ * This provides a slightly different visual character than the native arc.
+ */
+function drawBezierArc(
+  ctx: CanvasRenderingContext2D,
+  centerX: number,
+  centerY: number,
+  radius: number,
+  startAngle: number,
+  endAngle: number,
+  isFirst: boolean
+) {
+  // Calculate start and end points
+  const startX = centerX + radius * Math.cos(startAngle);
+  const startY = centerY + radius * Math.sin(startAngle);
+  const endX = centerX + radius * Math.cos(endAngle);
+  const endY = centerY + radius * Math.sin(endAngle);
+  
+  // Calculate control points for cubic Bézier approximation of quarter circle
+  // Control points are perpendicular to the radius at start/end, at distance k*radius
+  const k = BEZIER_QUARTER_CIRCLE_K;
+  
+  // For counterclockwise quarter arc (negative angle direction in canvas coords)
+  // Control point 1 is perpendicular to start radius, in the direction of the arc
+  const cp1X = startX + k * radius * Math.cos(startAngle - TAU / 4);
+  const cp1Y = startY + k * radius * Math.sin(startAngle - TAU / 4);
+  
+  // Control point 2 is perpendicular to end radius, opposite direction
+  const cp2X = endX + k * radius * Math.cos(endAngle + TAU / 4);
+  const cp2Y = endY + k * radius * Math.sin(endAngle + TAU / 4);
+  
+  if (isFirst) {
+    ctx.moveTo(startX, startY);
+  }
+  
+  ctx.bezierCurveTo(cp1X, cp1Y, cp2X, cp2Y, endX, endY);
 }
 
 /**
@@ -128,14 +165,19 @@ export function addSpiralToPath(
     const canvasStartAngle = -arc.startAngle;
     const canvasEndAngle = -arc.endAngle;
     
-    if (isFirst) {
-      const startX = center.cx + radius * Math.cos(canvasStartAngle);
-      const startY = center.cy + radius * Math.sin(canvasStartAngle);
-      ctx.moveTo(startX, startY);
-      isFirst = false;
+    if (strategy === 'bezier') {
+      drawBezierArc(ctx, center.cx, center.cy, radius, canvasStartAngle, canvasEndAngle, isFirst);
+    } else {
+      // Quarter arc (native canvas arc)
+      if (isFirst) {
+        const startX = center.cx + radius * Math.cos(canvasStartAngle);
+        const startY = center.cy + radius * Math.sin(canvasStartAngle);
+        ctx.moveTo(startX, startY);
+      }
+      ctx.arc(center.cx, center.cy, radius, canvasStartAngle, canvasEndAngle, arc.counterclockwise);
     }
     
-    ctx.arc(center.cx, center.cy, radius, canvasStartAngle, canvasEndAngle, arc.counterclockwise);
+    isFirst = false;
   }
 }
 
