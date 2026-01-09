@@ -50,12 +50,13 @@ export function SettingsMenu() {
           <Menu className="h-5 w-5" />
         </Button>
       </SheetTrigger>
-      <SheetContent side="right" className="w-80">
-        <SheetHeader>
+      <SheetContent side="right" className="w-80 flex flex-col h-full">
+        <SheetHeader className="flex-shrink-0">
           <SheetTitle>Settings</SheetTitle>
         </SheetHeader>
 
-        <div className="mt-6 space-y-6">
+        <ScrollArea className="flex-1 -mx-6 px-6 mt-6">
+          <div className="space-y-6 pb-6">
           {/* Theme Toggle */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -342,7 +343,8 @@ export function SettingsMenu() {
               </ScrollArea>
             </DialogContent>
           </Dialog>
-        </div>
+          </div>
+        </ScrollArea>
       </SheetContent>
     </Sheet>
   );
