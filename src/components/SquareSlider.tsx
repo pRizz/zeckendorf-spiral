@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { Slider } from "@/components/ui/slider";
-import { Play } from "lucide-react";
+import { Play, Square } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface SquareSliderProps {
@@ -56,18 +56,24 @@ function cubicBezier(p1x: number, p1y: number, p2x: number, p2y: number, t: numb
 }
 
 export function SquareSlider({ value, onChange, min = 1, max = 10, animationSpeed = 1 }: SquareSliderProps) {
-  const [isAnimating, setIsAnimating] = useState(false);
+  const [animatingDirection, setAnimatingDirection] = useState<'forward' | 'backward' | null>(null);
   const animationRef = useRef<number | null>(null);
   const startTimeRef = useRef<number>(0);
   const startValueRef = useRef<number>(0);
   const targetValueRef = useRef<number>(0);
 
-  const animateTo = (target: number) => {
-    if (isAnimating) {
-      // Cancel current animation
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current);
-      }
+  const stopAnimation = () => {
+    if (animationRef.current) {
+      cancelAnimationFrame(animationRef.current);
+      animationRef.current = null;
+    }
+    setAnimatingDirection(null);
+  };
+
+  const animateTo = (target: number, direction: 'forward' | 'backward') => {
+    if (animatingDirection) {
+      stopAnimation();
+      return; // If already animating, just stop
     }
 
     const start = value;
@@ -82,7 +88,7 @@ export function SquareSlider({ value, onChange, min = 1, max = 10, animationSpee
     startValueRef.current = start;
     targetValueRef.current = target;
     startTimeRef.current = performance.now();
-    setIsAnimating(true);
+    setAnimatingDirection(direction);
 
     const tick = (now: number) => {
       const elapsed = now - startTimeRef.current;
@@ -100,19 +106,27 @@ export function SquareSlider({ value, onChange, min = 1, max = 10, animationSpee
         animationRef.current = requestAnimationFrame(tick);
       } else {
         onChange(target);
-        setIsAnimating(false);
+        setAnimatingDirection(null);
       }
     };
 
     animationRef.current = requestAnimationFrame(tick);
   };
 
-  const playForward = () => {
-    animateTo(max);
+  const handlePlayForward = () => {
+    if (animatingDirection === 'forward') {
+      stopAnimation();
+    } else {
+      animateTo(max, 'forward');
+    }
   };
 
-  const playBackward = () => {
-    animateTo(min);
+  const handlePlayBackward = () => {
+    if (animatingDirection === 'backward') {
+      stopAnimation();
+    } else {
+      animateTo(min, 'backward');
+    }
   };
 
   // Cleanup on unmount
@@ -128,10 +142,13 @@ export function SquareSlider({ value, onChange, min = 1, max = 10, animationSpee
   const handleSliderChange = (val: number) => {
     if (animationRef.current) {
       cancelAnimationFrame(animationRef.current);
-      setIsAnimating(false);
+      setAnimatingDirection(null);
     }
     onChange(val);
   };
+
+  const isAnimatingBackward = animatingDirection === 'backward';
+  const isAnimatingForward = animatingDirection === 'forward';
 
   return (
     <div className="flex flex-col gap-4 w-full max-w-md">
@@ -145,16 +162,20 @@ export function SquareSlider({ value, onChange, min = 1, max = 10, animationSpee
       </div>
       
       <div className="flex items-center gap-3">
-        {/* Play backward button (to min) */}
+        {/* Play/Stop backward button (to min) */}
         <Button
           variant="ghost"
           size="icon"
-          onClick={playBackward}
-          disabled={value <= min}
+          onClick={handlePlayBackward}
+          disabled={!isAnimatingBackward && value <= min}
           className="h-8 w-8 shrink-0 text-muted-foreground hover:text-accent-foreground hover:bg-accent/20 disabled:opacity-30"
-          aria-label="Animate to minimum"
+          aria-label={isAnimatingBackward ? "Stop animation" : "Animate to minimum"}
         >
-          <Play className="h-4 w-4 rotate-180" />
+          {isAnimatingBackward ? (
+            <Square className="h-3 w-3 fill-current" />
+          ) : (
+            <Play className="h-4 w-4 rotate-180" />
+          )}
         </Button>
         
         <Slider
@@ -166,16 +187,20 @@ export function SquareSlider({ value, onChange, min = 1, max = 10, animationSpee
           className="flex-1"
         />
         
-        {/* Play forward button (to max) */}
+        {/* Play/Stop forward button (to max) */}
         <Button
           variant="ghost"
           size="icon"
-          onClick={playForward}
-          disabled={value >= max}
+          onClick={handlePlayForward}
+          disabled={!isAnimatingForward && value >= max}
           className="h-8 w-8 shrink-0 text-muted-foreground hover:text-accent-foreground hover:bg-accent/20 disabled:opacity-30"
-          aria-label="Animate to maximum"
+          aria-label={isAnimatingForward ? "Stop animation" : "Animate to maximum"}
         >
-          <Play className="h-4 w-4" />
+          {isAnimatingForward ? (
+            <Square className="h-3 w-3 fill-current" />
+          ) : (
+            <Play className="h-4 w-4" />
+          )}
         </Button>
       </div>
       
